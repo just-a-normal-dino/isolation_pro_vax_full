@@ -1,0 +1,1545 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{04\_Correlations\_real\_data}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    In this code we analyze how the isolation parameter correlates with the
+increase of anti-vaccination behavior
+
+    \hypertarget{import-libraries}{%
+\section{Import libraries}\label{import-libraries}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} import packages}
+\PY{k+kn}{import} \PY{n+nn}{sys}
+\PY{n}{sys}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{C:/Users/DeenoZord/Documents/All\PYZus{}Files\PYZus{}Laptop/Coding/Pyton\PYZus{}Files/Functions\PYZus{}and\PYZus{}modules}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{importlib}
+
+\PY{k+kn}{from} \PY{n+nn}{wgm2018\PYZus{}pack} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{k+kn}{import} \PY{n+nn}{winsound} 
+\PY{k+kn}{import} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{stats} \PY{k}{as} \PY{n+nn}{stt}
+
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{LinearRegression}
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{clear\PYZus{}output}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{list-of-attitudes}{%
+\section{List of attitudes}\label{list-of-attitudes}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{vacc\PYZus{}neut\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{n}{vacc\PYZus{}pos\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{vacc\PYZus{}Wpos\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                 \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{vacc\PYZus{}Spos\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                 \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+    
+\PY{n}{vacc\PYZus{}neg\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{vacc\PYZus{}Wneg\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                 \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{vacc\PYZus{}Sneg\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                 \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dk\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Know Science:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Understand meaning Sci:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Study disease is science:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Poetry is science:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in Prim.School:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in Sec.School:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in College/Uni:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Sci past 30d:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Med past 30d:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Sci:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Med:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence NGO:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence Hospitals:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits you:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science improve next gen:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science will increase jobs:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Who trust most for Med Advice:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Ever heard of vaccines:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Have Children:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Your Child Received Vax:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Religion:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science disagreed w your religion:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(disagreement)Believe science or religion:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{full\PYZus{}trust\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence Hospitals:Yes}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits you:Yes}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science improve next gen:Yes}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{medium\PYZus{}trus\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:Some}\PY{l+s+s1}{\PYZsq{}}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{medium\PYZus{}distrust\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{full\PYZus{}distrust\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{religion\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Religion:Named a specific religion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{refused\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Know Science:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Understand meaning Sci:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Study disease is science:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Poetry is science:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in Prim.School:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in Sec.School:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in College/Uni:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Sci past 30d:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Med past 30d:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Sci:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Med:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence NGO:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence Hospitals:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits you:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science improve next gen:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science will increase jobs:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Who trust most for Med Advice:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Ever heard of vaccines:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Have Children:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Your Child Received Vax:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Religion:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science disagreed w your religion:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(disagreement)Believe science or religion:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{list\PYZus{}aggr\PYZus{}vacc} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}neut\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}Wpos\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}Spos\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}Wneg\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}Sneg\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{list\PYZus{}aggr\PYZus{}trust} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{full\PYZus{}trust\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{medium\PYZus{}trus\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{medium\PYZus{}distrust\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{full\PYZus{}distrust\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{list\PYZus{}aggr\PYZus{}ref} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{refused\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dk\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{list\PYZus{}aggr\PYZus{}relig} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{religion\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{list\PYZus{}aggr\PYZus{}vacc2} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{vacc\PYZus{}neut\PYZus{}att}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{vacc\PYZus{}Wpos\PYZus{}att}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{vacc\PYZus{}Wneg\PYZus{}att}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{vacc\PYZus{}Sneg\PYZus{}att}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{n}{list\PYZus{}aggr\PYZus{}vacc\PYZus{}Spos} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{vacc\PYZus{}Spos\PYZus{}att}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{functions}{%
+\section{Functions}\label{functions}}
+
+    Define the functions to be used later
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Generates a bootstrapped correlation from data}
+\PY{k}{def} \PY{n+nf}{bootstrap\PYZus{}corr}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{f}\PY{p}{)}\PY{p}{:}
+    \PY{n}{l} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+    \PY{n}{c\PYZus{}vec} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+        \PY{n}{r} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{floor}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{o}{*}\PY{n}{l}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
+        \PY{n}{xi} \PY{o}{=} \PY{n}{x}\PY{p}{[}\PY{n}{r}\PY{p}{]}
+        \PY{n}{yi} \PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{r}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}         xi = x}
+\PY{c+c1}{\PYZsh{}         yi = y}
+        
+        \PY{n}{ct} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{xi}\PY{p}{,}\PY{n}{yi}\PY{p}{)}
+        
+        \PY{n}{c\PYZus{}vec}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{ct}\PY{p}{)}
+        
+    \PY{n}{c\PYZus{}vec} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{c\PYZus{}vec}\PY{p}{)}
+    
+    \PY{k}{return} \PY{p}{[}\PY{n}{c\PYZus{}vec}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{c\PYZus{}vec}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{c\PYZus{}vec}\PY{p}{)}\PY{p}{]}
+    
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{pearsonr\PYZus{}}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{)}\PY{p}{:}
+    \PY{p}{[}\PY{n}{r}\PY{p}{,}\PY{n}{p}\PY{p}{]} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{pearsonr}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{)}
+    \PY{k}{return} \PY{n}{r}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{spearmanr\PYZus{}positiv}\PY{p}{(}\PY{o}{*}\PY{n}{args}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} this version returns only r, which will be used for making the network}
+    \PY{p}{[}\PY{n}{r}\PY{p}{,}\PY{n}{p}\PY{p}{]} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{spearmanr}\PY{p}{(}\PY{o}{*}\PY{n}{args}\PY{p}{)}
+    \PY{k}{if} \PY{n}{r} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{:}
+        \PY{n}{r} \PY{o}{=} \PY{l+m+mi}{0}
+    
+    \PY{k}{return} \PY{n}{r}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{make\PYZus{}graph\PYZus{}}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{,} \PY{n}{metrics}\PY{p}{,} \PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{print\PYZus{}}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}  \PY{n}{df}\PY{o}{=}\PY{n}{wgm\PYZus{}bool}\PY{p}{)}\PY{p}{:}
+    \PY{n}{G} \PY{o}{=} \PY{n}{nx}\PY{o}{.}\PY{n}{Graph}\PY{p}{(}\PY{p}{)}
+    \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{node\PYZus{}i} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{j}\PY{p}{,} \PY{n}{node\PYZus{}j} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{)}\PY{p}{:}
+            
+            \PY{k}{if} \PY{n}{print\PYZus{}}\PY{p}{:}
+                \PY{n}{n\PYZus{}tot} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
+                \PY{n}{current} \PY{o}{=} \PY{p}{(}\PY{n}{i}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{)}\PY{p}{)}\PY{o}{+}\PY{p}{(}\PY{n}{j}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{n}{current}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{n\PYZus{}tot}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{round}\PY{p}{(}\PY{n}{current}\PY{o}{/}\PY{n}{n\PYZus{}tot}\PY{p}{,}\PY{n}{decimals}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+            
+            \PY{k}{if} \PY{n}{j} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{i}\PY{p}{:}
+                \PY{k}{continue}
+
+            \PY{k}{if} \PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{p}{:}
+                \PY{k}{if} \PY{n}{node\PYZus{}i}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{==} \PY{n}{node\PYZus{}j}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+                    \PY{c+c1}{\PYZsh{} if they belong to the same question}
+                    \PY{k}{continue}
+
+            \PY{p}{[}\PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{]} \PY{o}{=} \PY{n}{get\PYZus{}col\PYZus{}values}\PY{p}{(}\PY{p}{[}\PY{n}{node\PYZus{}i}\PY{p}{,}\PY{n}{node\PYZus{}j}\PY{p}{]}\PY{p}{,} \PY{n}{df}\PY{o}{=}\PY{n}{df}\PY{p}{)}
+            \PY{n}{weight} \PY{o}{=} \PY{n}{metrics}\PY{p}{(}\PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{)}
+            \PY{n}{G}\PY{o}{.}\PY{n}{add\PYZus{}weighted\PYZus{}edges\PYZus{}from}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{n}{node\PYZus{}i}\PY{p}{,}\PY{n}{node\PYZus{}j}\PY{p}{,}\PY{n}{weight}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    \PY{k}{return} \PY{n}{G}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{p\PYZus{}corr\PYZus{}}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{z}\PY{p}{,}\PY{n}{corr\PYZus{}fun}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} correlatuon between x and y after removing z}
+    
+    \PY{c+c1}{\PYZsh{} Need to reshape z as column for being accepted in LinearRegression}
+    \PY{n}{zz} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{el} \PY{o+ow}{in} \PY{n}{z}\PY{p}{:}
+        \PY{n}{zz}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{[}\PY{n}{el}\PY{p}{]}\PY{p}{)}
+    \PY{n}{z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{zz}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Get the residuals on x}
+    \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+    \PY{n}{x\PYZus{}predicted} \PY{o}{=} \PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+    \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+    \PY{n}{x\PYZus{}residuals} \PY{o}{=} \PY{n}{x}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}predicted}
+
+    \PY{c+c1}{\PYZsh{} Get the residuals on y}
+    \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+    \PY{n}{y\PYZus{}predicted} \PY{o}{=} \PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+    \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+    \PY{n}{y\PYZus{}residuals} \PY{o}{=} \PY{n}{y}\PY{o}{\PYZhy{}}\PY{n}{y\PYZus{}predicted}
+
+    \PY{n}{p\PYZus{}corr} \PY{o}{=} \PY{n}{corr\PYZus{}fun}\PY{p}{(}\PY{n}{x\PYZus{}residuals}\PY{p}{,} \PY{n}{y\PYZus{}residuals}\PY{p}{)}
+    \PY{k}{return} \PY{n}{p\PYZus{}corr}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{p\PYZus{}corr\PYZus{}multiple}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{z\PYZus{}s}\PY{p}{,}\PY{n}{corr\PYZus{}fun}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} z\PYZus{}s is a list of elements to remove}
+    \PY{c+c1}{\PYZsh{} correlatuon between x and y after removing z}
+    
+    \PY{c+c1}{\PYZsh{} Need to reshape z as column for being accepted in LinearRegression}
+    
+    \PY{k}{for} \PY{n}{z} \PY{o+ow}{in} \PY{n}{z\PYZus{}s}\PY{p}{:}
+        \PY{n}{zz} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{k}{for} \PY{n}{el} \PY{o+ow}{in} \PY{n}{z}\PY{p}{:}
+            \PY{n}{zz}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{[}\PY{n}{el}\PY{p}{]}\PY{p}{)}
+        \PY{n}{z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{zz}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} Get the residuals on x}
+        \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+        \PY{n}{x\PYZus{}predicted} \PY{o}{=} \PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+        \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+        \PY{n}{x\PYZus{}residuals} \PY{o}{=} \PY{n}{x}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}predicted}
+
+        \PY{c+c1}{\PYZsh{} Get the residuals on y}
+        \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+        \PY{n}{y\PYZus{}predicted} \PY{o}{=} \PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+        \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+        \PY{n}{y\PYZus{}residuals} \PY{o}{=} \PY{n}{y}\PY{o}{\PYZhy{}}\PY{n}{y\PYZus{}predicted}
+        
+        \PY{n}{x} \PY{o}{=} \PY{n}{x\PYZus{}residuals}
+        \PY{n}{y} \PY{o}{=} \PY{n}{y\PYZus{}residuals}
+
+    \PY{n}{p\PYZus{}corr} \PY{o}{=} \PY{n}{corr\PYZus{}fun}\PY{p}{(}\PY{n}{x\PYZus{}residuals}\PY{p}{,} \PY{n}{y\PYZus{}residuals}\PY{p}{)}
+    \PY{k}{return} \PY{n}{p\PYZus{}corr}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{check\PYZus{}avg\PYZus{}corr}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes}\PY{p}{,} \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n}\PY{p}{,} \PY{n}{metrics}\PY{p}{,} \PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{print\PYZus{}}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}  \PY{n}{df}\PY{o}{=}\PY{n}{wgm\PYZus{}bool}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} The first aggregated node is the one that you\PYZsq{}ll use to calculate the correlation}
+    
+\PY{c+c1}{\PYZsh{}     print(list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n)}
+    \PY{n}{a\PYZus{}node\PYZus{}i\PYZus{}name} \PY{o}{=} \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    \PY{n}{a\PYZus{}node\PYZus{}i} \PY{o}{=} \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    
+    \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
+    \PY{k}{for} \PY{n}{j}\PY{p}{,} \PY{n}{a\PYZus{}node\PYZus{}j\PYZus{}name} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n}\PY{p}{)}\PY{p}{:}
+        \PY{k}{if} \PY{n}{j} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+            \PY{k}{pass}
+        \PY{k}{else}\PY{p}{:}            
+            \PY{n}{a\PYZus{}node\PYZus{}j} \PY{o}{=} \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{}         count = 0}
+            \PY{n}{avg\PYZus{}weight} \PY{o}{=} \PY{l+m+mi}{0}
+    \PY{c+c1}{\PYZsh{}             print(a\PYZus{}node\PYZus{}i)}
+            \PY{k}{for} \PY{n}{ii}\PY{p}{,} \PY{n}{node\PYZus{}i} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{a\PYZus{}node\PYZus{}i}\PY{p}{)}\PY{p}{:}
+                \PY{k}{for} \PY{n}{jj}\PY{p}{,} \PY{n}{node\PYZus{}j} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{a\PYZus{}node\PYZus{}j}\PY{p}{)}\PY{p}{:}
+
+                    \PY{k}{if} \PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{p}{:}
+                        \PY{k}{if} \PY{n}{node\PYZus{}i}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{==} \PY{n}{node\PYZus{}j}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+                            \PY{c+c1}{\PYZsh{} if they belong to the same question}
+                            \PY{k}{continue}
+
+                    \PY{p}{[}\PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{]} \PY{o}{=} \PY{n}{get\PYZus{}col\PYZus{}values}\PY{p}{(}\PY{p}{[}\PY{n}{node\PYZus{}i}\PY{p}{,}\PY{n}{node\PYZus{}j}\PY{p}{]}\PY{p}{,}\PY{n}{df}\PY{o}{=}\PY{n}{df}\PY{p}{)}
+                    \PY{n}{weight} \PY{o}{=} \PY{n}{metrics}\PY{p}{(}\PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{)}
+
+                    \PY{k}{if} \PY{o+ow}{not} \PY{n}{np}\PY{o}{.}\PY{n}{isnan}\PY{p}{(}\PY{n}{weight}\PY{p}{)}\PY{p}{:}
+                        \PY{n}{avg\PYZus{}weight} \PY{o}{=} \PY{p}{(}\PY{n}{weight} \PY{o}{+} \PY{n}{avg\PYZus{}weight}\PY{o}{*}\PY{n}{count}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{n}{count}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}
+                        \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+    \PY{k}{return} \PY{n}{avg\PYZus{}weight}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{import-the-datasets}{%
+\section{Import the datasets}\label{import-the-datasets}}
+
+Notice that the Wellcome Global Monitor has already been imported
+
+    \hypertarget{dataset-on-vaccination-coverage}{%
+\subsubsection{Dataset on vaccination
+coverage}\label{dataset-on-vaccination-coverage}}
+
+Source: https://apps.who.int/gho/data/node.main.A824?lang=en
+
+Also available at:
+https://www.kaggle.com/lsind18/who-immunization-coverage
+
+    Note: when a future version is released, make sure to select the right
+column. Indeed, when also the 2020 data will be available, column 1 will
+not be anymore the 2019 data, but the 2020!
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df\PYZus{}vacc\PYZus{}coverage} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MCV2\PYZus{}2019.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{df\PYZus{}vacc\PYZus{}coverage}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    Unnamed: 0  \textbackslash{}
+0      Country
+1  Afghanistan
+2      Albania
+3      Algeria
+4      Andorra
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%)  \textbackslash{}
+0                                               2019
+1                                                 39
+2                                                 96
+3                                                 77
+4                                                 95
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).1  \textbackslash{}
+0                                             2018.0
+1                                               39.0
+2                                               96.0
+3                                               77.0
+4                                               95.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).2  \textbackslash{}
+0                                             2017.0
+1                                               39.0
+2                                               98.0
+3                                               92.0
+4                                               94.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).3  \textbackslash{}
+0                                             2016.0
+1                                               39.0
+2                                               98.0
+3                                               96.0
+4                                               90.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).4  \textbackslash{}
+0                                             2015.0
+1                                               39.0
+2                                               98.0
+3                                               99.0
+4                                               88.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).5  \textbackslash{}
+0                                             2014.0
+1                                               39.0
+2                                               98.0
+3                                               99.0
+4                                               90.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).6  \textbackslash{}
+0                                             2013.0
+1                                               35.0
+2                                               99.0
+3                                               93.0
+4                                               91.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).7  \textbackslash{}
+0                                             2012.0
+1                                               33.0
+2                                               99.0
+3                                               95.0
+4                                               89.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).8  \textbackslash{}
+0                                             2011.0
+1                                               31.0
+2                                               99.0
+3                                               96.0
+4                                               82.0
+
+   {\ldots}  \textbackslash{}
+0  {\ldots}
+1  {\ldots}
+2  {\ldots}
+3  {\ldots}
+4  {\ldots}
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).10  \textbackslash{}
+0                                             2009.0
+1                                               24.0
+2                                               98.0
+3                                               98.0
+4                                               82.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).11  \textbackslash{}
+0                                             2008.0
+1                                               23.0
+2                                               98.0
+3                                               96.0
+4                                               86.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).12  \textbackslash{}
+0                                             2007.0
+1                                                4.0
+2                                               95.0
+3                                               95.0
+4                                               80.0
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).13  \textbackslash{}
+0                                             2006.0
+1                                               18.0
+2                                               94.0
+3                                               98.0
+4                                                NaN
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).14  \textbackslash{}
+0                                             2005.0
+1                                                9.0
+2                                               97.0
+3                                               94.0
+4                                                NaN
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).15  \textbackslash{}
+0                                             2004.0
+1                                                2.0
+2                                               96.0
+3                                               94.0
+4                                                NaN
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).16  \textbackslash{}
+0                                             2003.0
+1                                                NaN
+2                                               93.0
+3                                               96.0
+4                                                NaN
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).17  \textbackslash{}
+0                                             2002.0
+1                                                NaN
+2                                               93.0
+3                                               93.0
+4                                                NaN
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).18  \textbackslash{}
+0                                             2001.0
+1                                                NaN
+2                                               90.0
+3                                               73.0
+4                                                NaN
+
+   Measles-containing-vaccine second-dose (MCV2) immunization coverage by the
+nationally recommended age (\%).19
+0                                             2000.0
+1                                                NaN
+2                                                NaN
+3                                               78.0
+4                                                NaN
+
+[5 rows x 21 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{dataset-on-attitudes-towards-vaccination}{%
+\section{Dataset on attitudes towards
+vaccination}\label{dataset-on-attitudes-towards-vaccination}}
+
+Source:
+https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(20)31558-0/
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df\PYZus{}trust} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}excel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vaccine\PYZus{}trust.xlsx}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{sheet\PYZus{}name}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{raw\PYZus{}data}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{df\PYZus{}trust}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+  country or territory who\_region  count  sagree  sdisagree   question  \textbackslash{}
+0          Afghanistan        EMR   2080    1403         16  effective
+1          Afghanistan        EMR    990     775          8  effective
+2          Afghanistan        EMR   1724    1038         34  effective
+3          Afghanistan        EMR   2080    1585          7  important
+4          Afghanistan        EMR    990     838          5  important
+
+          time  perc sagree  perc sdisagr
+0  2015.833333    67.451923      0.769231
+1  2018.538889    78.282828      0.808081
+2  2019.915068    60.208817      1.972158
+3  2015.833333    76.201923      0.336538
+4  2018.538889    84.646465      0.505051
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{test-the-correlations}{%
+\section{Test the correlations}\label{test-the-correlations}}
+
+    \hypertarget{prediction-in-vaccination-coverage}{%
+\subsubsection{Prediction in vaccination
+coverage}\label{prediction-in-vaccination-coverage}}
+
+i.e.~if the increase in vaccination coverage correlates with the
+isolation parameter
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{year\PYZus{}col\PYZus{}base} \PY{o}{=} \PY{l+m+mi}{2} \PY{c+c1}{\PYZsh{} this is for choosing the year [1 = 2019, 2 = 2018, etc... range 2019\PYZhy{}1980]}
+\PY{n}{year\PYZus{}col\PYZus{}new} \PY{o}{=} \PY{l+m+mi}{1} 
+\PY{c+c1}{\PYZsh{} year\PYZus{}col\PYZus{}base will be 2018 and year\PYZus{}col\PYZus{}new will be 2019. This is for calculating the increment in vaccination coverage}
+
+\PY{c+c1}{\PYZsh{} Parameters for calculating the isolation parameter}
+\PY{n}{metrics} \PY{o}{=} \PY{n}{pearsonr\PYZus{}}
+\PY{n}{df} \PY{o}{=} \PY{n}{wgm\PYZus{}bool}
+\PY{n}{exclude\PYZus{}same\PYZus{}question} \PY{o}{=} \PY{k+kc}{True} \PY{c+c1}{\PYZsh{} Do not calculate corr between answers of the same question}
+
+\PY{c+c1}{\PYZsh{} Extra parameters}
+\PY{n}{df\PYZus{}alt} \PY{o}{=} \PY{n}{df\PYZus{}vacc\PYZus{}coverage}
+
+\PY{c+c1}{\PYZsh{} Initialize variables}
+\PY{n}{aggr\PYZus{}wealth} \PY{o}{=} \PY{n+nb}{dict}\PY{p}{(}\PY{p}{)}
+\PY{n}{dic\PYZus{}coverage\PYZus{}inc} \PY{o}{=} \PY{n+nb}{dict}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n} \PY{o}{=} \PY{n}{list\PYZus{}aggr\PYZus{}vacc\PYZus{}Spos}\PY{o}{+}\PY{n}{list\PYZus{}aggr\PYZus{}vacc2} \PY{c+c1}{\PYZsh{} For calculating the isolation}
+
+\PY{c+c1}{\PYZsh{} Use the previous list to generate the variables}
+\PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{name} \PY{o+ow}{in} \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n}\PY{p}{:}
+    \PY{n}{exec}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{t = }\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{n}{name}\PY{p}{)}
+    \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{t}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} inizialization of the lists}
+
+\PY{n}{coverage\PYZus{}increase\PYZus{}vec} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{corr\PYZus{}score\PYZus{}vec} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{country\PYZus{}wealth} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{country\PYZus{}n\PYZus{}agree} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{} For each country in the df}
+\PY{n}{country\PYZus{}list\PYZus{}df} \PY{o}{=} \PY{p}{[}\PY{n}{col} \PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{df}\PY{o}{.}\PY{n}{columns} \PY{k}{if} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Country}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{in} \PY{n}{col}\PY{p}{]} \PY{c+c1}{\PYZsh{} select the country columns}
+\PY{n}{country\PYZus{}list\PYZus{}df} \PY{o}{=} \PY{p}{[}\PY{n}{col} \PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{country\PYZus{}list\PYZus{}df} \PY{k}{if} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{col}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{]} \PY{c+c1}{\PYZsh{} select the ones that have no 0 elements}
+
+\PY{n}{country\PYZus{}count} \PY{o}{=} \PY{l+m+mi}{0} \PY{c+c1}{\PYZsh{} counter for checking how many countries we are analyzing}
+\PY{n}{tot\PYZus{}country} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{country\PYZus{}list\PYZus{}df}\PY{p}{)}
+
+\PY{n}{count\PYZus{}temp} \PY{o}{=} \PY{l+m+mi}{0}
+\PY{k}{for} \PY{n}{count\PYZus{}col} \PY{o+ow}{in} \PY{n}{country\PYZus{}list\PYZus{}df}\PY{p}{:} \PY{c+c1}{\PYZsh{} for each country}
+    \PY{n}{country} \PY{o}{=} \PY{n}{count\PYZus{}col}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+
+    \PY{n}{country\PYZus{}count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+    \PY{k}{if} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{df\PYZus{}alt}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Unnamed: 0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{n}{country}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} if the country is also in the other dataset}
+        \PY{n}{count\PYZus{}temp} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+        \PY{n}{df\PYZus{}count} \PY{o}{=} \PY{n}{df} \PY{p}{[} \PY{n}{df}\PY{p}{[}\PY{n}{count\PYZus{}col}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}
+
+        \PY{c+c1}{\PYZsh{} Get the vaccine rate for the different years}
+        \PY{n}{mask\PYZus{}vacc} \PY{o}{=} \PY{n}{df\PYZus{}alt}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Unnamed: 0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{n}{country} \PY{c+c1}{\PYZsh{} select the data from the specific country}
+        \PY{n}{serie\PYZus{}base} \PY{o}{=} \PY{n}{df\PYZus{}alt}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{year\PYZus{}col\PYZus{}base}\PY{p}{]} \PY{c+c1}{\PYZsh{} 2018 data}
+        \PY{n}{serie\PYZus{}new} \PY{o}{=} \PY{n}{df\PYZus{}alt}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{year\PYZus{}col\PYZus{}new}\PY{p}{]} \PY{c+c1}{\PYZsh{} 2019 data}
+
+        \PY{c+c1}{\PYZsh{} Calculate the increase in vaccination coverage}
+        \PY{n}{val\PYZus{}base} \PY{o}{=} \PY{n}{serie\PYZus{}base}\PY{p}{[}\PY{n}{mask\PYZus{}vacc}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{val\PYZus{}new} \PY{o}{=} \PY{n}{serie\PYZus{}new}\PY{p}{[}\PY{n}{mask\PYZus{}vacc}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{val} \PY{o}{=} \PY{n}{val\PYZus{}new}\PY{o}{\PYZhy{}}\PY{n}{val\PYZus{}base}
+        \PY{n}{val} \PY{o}{=} \PY{n}{val}\PY{o}{/}\PY{n}{val\PYZus{}base}
+        \PY{n}{coverage\PYZus{}increase} \PY{o}{=} \PY{n}{val}
+        
+        \PY{c+c1}{\PYZsh{} Get the country wealth}
+        \PY{n}{a} \PY{o}{=} \PY{n}{wgm\PYZus{}numeric} \PY{p}{[}\PY{n}{wgm\PYZus{}bool}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Country:}\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{n}{country}\PY{p}{]}\PY{p}{]} 
+        \PY{n}{wealth} \PY{o}{=} \PY{n}{a}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Income Level}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        
+        \PY{c+c1}{\PYZsh{} Get the isolation parameter}
+        \PY{n}{avg\PYZus{}corr} \PY{o}{=} \PY{n}{check\PYZus{}avg\PYZus{}corr}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes}\PY{p}{,} \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n}\PY{p}{,} \PY{n}{metrics}\PY{p}{,} \PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{o}{=}\PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{p}{,} \PY{n}{print\PYZus{}}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}  \PY{n}{df}\PY{o}{=}\PY{n}{df\PYZus{}count}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} Store the data}
+        \PY{k}{if} \PY{p}{(}\PY{o+ow}{not} \PY{n}{np}\PY{o}{.}\PY{n}{isnan}\PY{p}{(}\PY{n}{coverage\PYZus{}increase}\PY{p}{)}\PY{p}{)} \PY{o+ow}{and} \PY{p}{(}\PY{o+ow}{not} \PY{n}{np}\PY{o}{.}\PY{n}{isnan}\PY{p}{(}\PY{n}{avg\PYZus{}corr}\PY{p}{)}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} if the data of the country were not corrupted}
+            \PY{n}{coverage\PYZus{}increase\PYZus{}vec}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{coverage\PYZus{}increase}\PY{p}{)}
+            \PY{n}{corr\PYZus{}score\PYZus{}vec}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{avg\PYZus{}corr}\PY{p}{)}
+            \PY{n}{country\PYZus{}wealth}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{wealth}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Get the percentage of totally agree}
+            \PY{n}{a} \PY{o}{=} \PY{n}{wgm\PYZus{}bool} \PY{p}{[}\PY{n}{wgm\PYZus{}bool}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Country:}\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{n}{country}\PY{p}{]}\PY{p}{]} 
+            \PY{n}{n\PYZus{}agree} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{a}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Vaccines important to children:Strongly agree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{a}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Vaccines important to children:Strongly agree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+            \PY{n}{country\PYZus{}n\PYZus{}agree}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{n\PYZus{}agree}\PY{p}{)}
+            
+            \PY{n}{dic\PYZus{}coverage\PYZus{}inc}\PY{p}{[}\PY{n}{country}\PY{p}{]} \PY{o}{=} \PY{n}{coverage\PYZus{}increase}
+            
+\PY{c+c1}{\PYZsh{}             n\PYZus{}agree = np.sum(wgm\PYZus{}bool[\PYZdq{}Vaccines Effective:Strongly agree\PYZdq{}])}
+\PY{c+c1}{\PYZsh{}             n\PYZus{}agree = np.sum(wgm\PYZus{}bool[\PYZdq{}Vaccines Safe:Strongly agree\PYZdq{}])}
+            \PY{n}{clear\PYZus{}output}\PY{p}{(}\PY{p}{)}
+
+
+\PY{n}{coverage\PYZus{}increase\PYZus{}vec} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{coverage\PYZus{}increase\PYZus{}vec}\PY{p}{)}
+\PY{n}{corr\PYZus{}score\PYZus{}vec} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{corr\PYZus{}score\PYZus{}vec}\PY{p}{)}
+\PY{n}{country\PYZus{}n\PYZus{}agree} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{country\PYZus{}n\PYZus{}agree}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} make a df for the partial corr}
+\PY{n}{df\PYZus{}pcorr} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{)}
+\PY{n}{df\PYZus{}pcorr}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vaccine cov}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{coverage\PYZus{}increase\PYZus{}vec}
+\PY{n}{df\PYZus{}pcorr}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{corr scor}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{corr\PYZus{}score\PYZus{}vec}
+\PY{n}{df\PYZus{}pcorr}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{wealth}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{country\PYZus{}wealth}
+\PY{n}{df\PYZus{}pcorr}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{n\PYZus{}sagree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{country\PYZus{}n\PYZus{}agree}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{CORRELATION RESULTS:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{corr coverage increase \PYZam{} isolation = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{stt}\PY{o}{.}\PY{n}{spearmanr}\PY{p}{(}\PY{n}{coverage\PYZus{}increase\PYZus{}vec}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{n}{corr\PYZus{}score\PYZus{}vec}\PY{p}{)}\PY{p}{)}
+\PY{n}{corr\PYZus{}fun} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{spearmanr}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{partial corr (removing wealth) = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{p\PYZus{}corr\PYZus{}}\PY{p}{(}\PY{n}{coverage\PYZus{}increase\PYZus{}vec}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{n}{corr\PYZus{}score\PYZus{}vec}\PY{p}{,}\PY{n}{country\PYZus{}wealth}\PY{p}{,}\PY{n}{corr\PYZus{}fun}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{partial corr (n\PYZus{}agree) = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{p\PYZus{}corr\PYZus{}}\PY{p}{(}\PY{n}{coverage\PYZus{}increase\PYZus{}vec}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{n}{corr\PYZus{}score\PYZus{}vec}\PY{p}{,}\PY{n}{country\PYZus{}n\PYZus{}agree}\PY{p}{,}\PY{n}{corr\PYZus{}fun}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{partial corr removing both = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{p\PYZus{}corr\PYZus{}multiple}\PY{p}{(}\PY{n}{coverage\PYZus{}increase\PYZus{}vec}\PY{p}{,}
+                                                  \PY{o}{\PYZhy{}}\PY{n}{corr\PYZus{}score\PYZus{}vec}\PY{p}{,}
+                                                   \PY{p}{[}\PY{n}{country\PYZus{}n\PYZus{}agree}\PY{p}{,}\PY{n}{country\PYZus{}wealth}\PY{p}{]} \PY{p}{,}\PY{n}{corr\PYZus{}fun}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+CORRELATION RESULTS:
+corr coverage increase \& isolation =
+SpearmanrResult(correlation=-0.3096431228578482, pvalue=0.0010513472094203522)
+partial corr (removing wealth) =
+SpearmanrResult(correlation=-0.29082189056701163, pvalue=0.002155965916985571)
+partial corr (n\_agree) =  SpearmanrResult(correlation=-0.31119132236142766,
+pvalue=0.0009889328639034539)
+partial corr removing both =  SpearmanrResult(correlation=-0.2619463531969236,
+pvalue=0.0059325139108974845)
+    \end{Verbatim}
+
+    Only the correlation between the two:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Correlation betwee coverage increase \PYZam{} isolation}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{p}{[}\PY{n}{r}\PY{p}{,}\PY{n}{p}\PY{p}{]} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{spearmanr}\PY{p}{(}\PY{n}{coverage\PYZus{}increase\PYZus{}vec}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{n}{corr\PYZus{}score\PYZus{}vec}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{r}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{p = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Correlation betwee coverage increase \& isolation
+r =  -0.3096431228578482
+p =  0.0010513472094203522
+    \end{Verbatim}
+
+    Partial correlation after removing both wealth and trust:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{PARTIAL Correlation between coverage increase \PYZam{} isolation}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{p}{[}\PY{n}{r}\PY{p}{,}\PY{n}{p}\PY{p}{]} \PY{o}{=} \PY{n}{p\PYZus{}corr\PYZus{}multiple}\PY{p}{(}\PY{n}{coverage\PYZus{}increase\PYZus{}vec}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{n}{corr\PYZus{}score\PYZus{}vec}\PY{p}{,}\PY{p}{[}\PY{n}{country\PYZus{}n\PYZus{}agree}\PY{p}{,}\PY{n}{country\PYZus{}wealth}\PY{p}{]} \PY{p}{,}\PY{n}{corr\PYZus{}fun}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{r}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{p = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+PARTIAL Correlation between coverage increase \& isolation
+r =  -0.2619463531969236
+p =  0.0059325139108974845
+    \end{Verbatim}
+
+    Thus the higher the isolation, the stronger the decrease in vaccination
+rate
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    You can also calculate the correlation using bootstrapping
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{p}{[}\PY{n}{c}\PY{p}{,}\PY{n}{err}\PY{p}{]}\PY{o}{=}\PY{n}{bootstrap\PYZus{}corr}\PY{p}{(}\PY{n}{coverage\PYZus{}increase\PYZus{}vec}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{n}{corr\PYZus{}score\PYZus{}vec}\PY{p}{,}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{pearsonr\PYZus{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Corr = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ +\PYZhy{} }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{err}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Corr =  -0.32949208258180107  +-  0.06902317597248075
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{test-prediction-in-trust}{%
+\subsubsection{Test prediction in
+Trust}\label{test-prediction-in-trust}}
+
+i.e.~if the isolation parameter correlates with increase in distrust
+
+    Calculate the average correlations in each country
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{df} \PY{o}{=} \PY{n}{wgm\PYZus{}bool}
+
+\PY{n}{exclude\PYZus{}same\PYZus{}question} \PY{o}{=} \PY{k+kc}{True} \PY{c+c1}{\PYZsh{} True or false}
+\PY{n}{metrics} \PY{o}{=} \PY{n}{pearsonr\PYZus{}}
+\PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n} \PY{o}{=} \PY{n}{list\PYZus{}aggr\PYZus{}vacc\PYZus{}Spos}\PY{o}{+}\PY{n}{list\PYZus{}aggr\PYZus{}vacc2}
+
+\PY{c+c1}{\PYZsh{} Turn the names into attitudes}
+\PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{name} \PY{o+ow}{in} \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n}\PY{p}{:}
+    \PY{n}{exec}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{t = }\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{n}{name}\PY{p}{)}
+    \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{t}\PY{p}{)}
+
+\PY{n}{no\PYZus{}vax\PYZus{}score\PYZus{}vec} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{corr\PYZus{}score\PYZus{}vec} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{n\PYZus{}notSpos} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{n\PYZus{}Spos} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{} For each country in the df}
+\PY{n}{country\PYZus{}list\PYZus{}df} \PY{o}{=} \PY{p}{[}\PY{n}{col} \PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{df}\PY{o}{.}\PY{n}{columns} \PY{k}{if} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Country:}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{in} \PY{n}{col}\PY{p}{]} \PY{c+c1}{\PYZsh{} select the country columns}
+\PY{n}{country\PYZus{}list\PYZus{}df} \PY{o}{=} \PY{p}{[}\PY{n}{col} \PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{country\PYZus{}list\PYZus{}df} \PY{k}{if} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{col}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{]} \PY{c+c1}{\PYZsh{} select the ones that have no 0 elements}
+
+\PY{n}{dic\PYZus{}distance} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+
+\PY{k}{for} \PY{n}{count\PYZus{}col} \PY{o+ow}{in} \PY{n}{country\PYZus{}list\PYZus{}df}\PY{p}{:}
+
+    \PY{n}{country\PYZus{}name} \PY{o}{=} \PY{n}{count\PYZus{}col}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+    
+    \PY{n}{df\PYZus{}count} \PY{o}{=} \PY{n}{df} \PY{p}{[} \PY{n}{df}\PY{p}{[}\PY{n}{count\PYZus{}col}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{} Get the isolation measur}
+    \PY{n}{avg\PYZus{}corr} \PY{o}{=} \PY{n}{check\PYZus{}avg\PYZus{}corr}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes}\PY{p}{,} \PY{n}{list\PYZus{}of\PYZus{}aggregated\PYZus{}nodes\PYZus{}n}\PY{p}{,} \PY{n}{metrics}\PY{p}{,} \PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{o}{=}\PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{p}{,} \PY{n}{print\PYZus{}}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}  \PY{n}{df}\PY{o}{=}\PY{n}{df\PYZus{}count}\PY{p}{)}
+
+    \PY{n}{dic\PYZus{}distance}\PY{p}{[}\PY{n}{country\PYZus{}name}\PY{p}{]} \PY{o}{=} \PY{n}{avg\PYZus{}corr}
+    \PY{n}{clear\PYZus{}output}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Calculate the increase in the level of distrust for each country
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dic\PYZus{}increase} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+\PY{n}{dic\PYZus{}trust\PYZus{}18} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+
+\PY{n}{c\PYZus{}18} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{c\PYZus{}19} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{diff\PYZus{}vec} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{country} \PY{o+ow}{in} \PY{n}{df\PYZus{}trust}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{country or territory}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    
+    \PY{n}{c19\PYZus{}t} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{nan}
+    \PY{n}{c18\PYZus{}t} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{nan}
+    
+    \PY{n}{df\PYZus{}t} \PY{o}{=} \PY{n}{df\PYZus{}trust} \PY{p}{[}\PY{n}{df\PYZus{}trust}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{country or territory}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{n}{country}\PY{p}{]}
+    \PY{n}{df\PYZus{}t} \PY{o}{=} \PY{n}{df\PYZus{}t} \PY{p}{[} \PY{n}{df\PYZus{}t}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{question}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{effective}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+    
+    
+    \PY{c+c1}{\PYZsh{} Find the trust value for 2018 and 2019}
+    \PY{c+c1}{\PYZsh{} notice that we may have multiple 2018 values for the same country, }
+    \PY{c+c1}{\PYZsh{} in this case, we take the earliest one}
+    \PY{n}{tt2018} \PY{o}{=} \PY{l+m+mi}{3000}
+    \PY{k}{for} \PY{n}{li} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df\PYZus{}t}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{n}{line} \PY{o}{=} \PY{n}{df\PYZus{}t}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{li}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+        
+        \PY{n}{tt2} \PY{o}{=} \PY{n}{line}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{time}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+        
+        \PY{k}{if} \PY{n}{tt2}\PY{o}{\PYZgt{}}\PY{l+m+mi}{2018} \PY{o+ow}{and} \PY{n}{tt2}\PY{o}{\PYZlt{}}\PY{l+m+mi}{2020}\PY{p}{:} 
+            
+            \PY{k}{if} \PY{n}{tt2}\PY{o}{\PYZgt{}}\PY{l+m+mi}{2019}\PY{p}{:}
+                \PY{n}{c19\PYZus{}t} \PY{o}{=} \PY{n}{line}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{perc sdisagr}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+                
+            \PY{k}{if} \PY{n}{tt2}\PY{o}{\PYZlt{}}\PY{l+m+mi}{2019} \PY{o+ow}{and} \PY{n}{tt2018}\PY{o}{\PYZgt{}}\PY{n}{tt2}\PY{p}{:}
+                \PY{n}{tt2} \PY{o}{=} \PY{n}{tt2}
+                \PY{n}{c18\PYZus{}t} \PY{o}{=} \PY{n}{line}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{perc sdisagr}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+                
+    
+    \PY{k}{if} \PY{o+ow}{not} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{isnan}\PY{p}{(}\PY{n}{c19\PYZus{}t}\PY{p}{)} \PY{o+ow}{or} \PY{n}{np}\PY{o}{.}\PY{n}{isnan}\PY{p}{(}\PY{n}{c18\PYZus{}t}\PY{p}{)}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} if none is corrupted}
+        \PY{n}{diff} \PY{o}{=} \PY{n}{c19\PYZus{}t}\PY{o}{\PYZhy{}}\PY{n}{c18\PYZus{}t}
+            
+        \PY{n}{dic\PYZus{}increase}\PY{p}{[}\PY{n}{country}\PY{p}{]} \PY{o}{=} \PY{n}{diff}
+        
+        \PY{n}{c\PYZus{}18}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{c18\PYZus{}t}\PY{p}{)}
+        \PY{n}{c\PYZus{}19}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{c19\PYZus{}t}\PY{p}{)}
+        \PY{n}{diff\PYZus{}vec}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{diff}\PY{p}{)}
+        \PY{n}{dic\PYZus{}trust\PYZus{}18}\PY{p}{[}\PY{n}{country}\PY{p}{]} \PY{o}{=} \PY{n}{c18\PYZus{}t}
+    
+\end{Verbatim}
+\end{tcolorbox}
+
+    Use the same names in the two dictionaries
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dic\PYZus{}increase}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{United States}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{dic\PYZus{}increase}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{USA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{dic\PYZus{}increase}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{United Kingdom}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{dic\PYZus{}increase}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{UK}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{k}{del} \PY{n}{dic\PYZus{}increase}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{UK}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{k}{del} \PY{n}{dic\PYZus{}increase}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{USA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Select only the countries which are common to the two datasets
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{country} \PY{o+ow}{in} \PY{n}{dic\PYZus{}increase}\PY{p}{:}
+    \PY{k}{if} \PY{n}{country} \PY{o+ow}{in} \PY{n}{dic\PYZus{}distance}\PY{p}{:}
+        \PY{n}{x}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{dic\PYZus{}increase}\PY{p}{[}\PY{n}{country}\PY{p}{]}\PY{p}{)}
+        \PY{n}{y}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{dic\PYZus{}distance}\PY{p}{[}\PY{n}{country}\PY{p}{]}\PY{p}{)}
+        
+\PY{n}{x} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{r}\PY{p}{,}\PY{n}{p} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{pearsonr}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{r}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{p = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+r =  0.3175692633416603
+p =  0.04883571042187488
+    \end{Verbatim}
+
+    Thus the higher the isolation parameter the stronger the distrust in a
+country
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    If you want to repeat it for bootstrapped correlation\ldots{}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{p}{[}\PY{n}{c}\PY{p}{,}\PY{n}{err}\PY{p}{]}\PY{o}{=}\PY{n}{bootstrap\PYZus{}corr}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{l+m+mi}{100}\PY{p}{,}\PY{n}{pearsonr\PYZus{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Corr = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{c}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ +\PYZhy{} }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{err}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Notice that here the second value is NOT the p\PYZhy{}value but the standard deviation}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Corr =  0.3003042766202958  +-  0.0892659271488426
+Notice that here the second value is NOT the p-value but the standard deviation
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{test-predictions-from-confidence}{%
+\section{Test predictions from
+confidence}\label{test-predictions-from-confidence}}
+
+Before we showed that isolation can be used for measuring ``dynamic
+effects'' (i.e.~what will happen in the future). Here we show that
+distrust has only a static and not dynamic effect
+
+    Correlation between distrust and its future value
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Correlation between distrust in 2018 and its increase in 2019}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{r}\PY{p}{,}\PY{n}{p} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{pearsonr}\PY{p}{(}\PY{n}{c\PYZus{}18}\PY{p}{,}\PY{n}{diff\PYZus{}vec}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{r}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{p = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Correlation between distrust in 2018 and its increase in 2019
+r =  0.014380609709720549
+p =  0.9307594563031496
+    \end{Verbatim}
+
+    Correlation between distrust and future increase in vaccination coverage
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{country} \PY{o+ow}{in} \PY{n}{dic\PYZus{}coverage\PYZus{}inc}\PY{p}{:}
+    \PY{k}{if} \PY{n}{country} \PY{o+ow}{in} \PY{n}{dic\PYZus{}trust\PYZus{}18}\PY{p}{:}
+        \PY{n}{x}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{dic\PYZus{}coverage\PYZus{}inc}\PY{p}{[}\PY{n}{country}\PY{p}{]}\PY{p}{)}
+        \PY{n}{y}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{dic\PYZus{}trust\PYZus{}18}\PY{p}{[}\PY{n}{country}\PY{p}{]}\PY{p}{)}
+        
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Correlation between trust in 2018 and increase in vaccination coverage in 2019}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{r}\PY{p}{,}\PY{n}{p} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{pearsonr}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{r}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{p = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{p}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Correlation between trust in 2018 and increase in vaccination coverage in 2019
+r =  -0.13943278609065618
+p =  0.4706786135876143
+    \end{Verbatim}
+
+    As we can see both of them ar non-significant showing how distrust
+provides a static information.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

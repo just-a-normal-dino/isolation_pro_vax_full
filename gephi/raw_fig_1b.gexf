@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2021-06-08">
+    <creator>NetworkX 2.5</creator>
+  </meta>
+  <graph defaultedgetype="undirected" mode="static" name="">
+    <attributes mode="static" class="edge">
+      <attribute id="0" title="pos_" type="long" />
+    </attributes>
+    <nodes>
+      <node id="Strongly agree" label="Strongly agree" />
+      <node id="Somewhat agree" label="Somewhat agree" />
+      <node id="Neither agree nor disagree" label="Neither agree nor disagree" />
+      <node id="Somewhat disagree" label="Somewhat disagree" />
+      <node id="Strongly disagree" label="Strongly disagree" />
+    </nodes>
+    <edges>
+      <edge source="Strongly agree" target="Strongly agree" id="0" weight="0">
+        <attvalues>
+          <attvalue for="0" value="2" />
+        </attvalues>
+      </edge>
+      <edge source="Strongly agree" target="Somewhat agree" id="1" weight="-0.019184750756096623">
+        <attvalues>
+          <attvalue for="0" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="Strongly agree" target="Neither agree nor disagree" id="2" weight="-0.016190497654031438">
+        <attvalues>
+          <attvalue for="0" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="Strongly agree" target="Somewhat disagree" id="3" weight="-0.020121270360514826">
+        <attvalues>
+          <attvalue for="0" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="Strongly agree" target="Strongly disagree" id="4" weight="-0.0017100996670184033">
+        <attvalues>
+          <attvalue for="0" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="Somewhat agree" target="Somewhat agree" id="5" weight="0">
+        <attvalues>
+          <attvalue for="0" value="2" />
+        </attvalues>
+      </edge>
+      <edge source="Somewhat agree" target="Neither agree nor disagree" id="6" weight="0.006607769176363051">
+        <attvalues>
+          <attvalue for="0" value="3" />
+        </attvalues>
+      </edge>
+      <edge source="Somewhat agree" target="Somewhat disagree" id="7" weight="0.017043810213665127">
+        <attvalues>
+          <attvalue for="0" value="3" />
+        </attvalues>
+      </edge>
+      <edge source="Somewhat agree" target="Strongly disagree" id="8" weight="-0.012210812575194664">
+        <attvalues>
+          <attvalue for="0" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="Neither agree nor disagree" target="Neither agree nor disagree" id="9" weight="0">
+        <attvalues>
+          <attvalue for="0" value="2" />
+        </attvalues>
+      </edge>
+      <edge source="Neither agree nor disagree" target="Somewhat disagree" id="10" weight="0.02625131291907838">
+        <attvalues>
+          <attvalue for="0" value="3" />
+        </attvalues>
+      </edge>
+      <edge source="Neither agree nor disagree" target="Strongly disagree" id="11" weight="0.0158942246035038">
+        <attvalues>
+          <attvalue for="0" value="3" />
+        </attvalues>
+      </edge>
+      <edge source="Somewhat disagree" target="Somewhat disagree" id="12" weight="0">
+        <attvalues>
+          <attvalue for="0" value="2" />
+        </attvalues>
+      </edge>
+      <edge source="Somewhat disagree" target="Strongly disagree" id="13" weight="0.014152643406576921">
+        <attvalues>
+          <attvalue for="0" value="3" />
+        </attvalues>
+      </edge>
+      <edge source="Strongly disagree" target="Strongly disagree" id="14" weight="0">
+        <attvalues>
+          <attvalue for="0" value="2" />
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>

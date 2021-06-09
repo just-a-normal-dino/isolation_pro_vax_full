@@ -1,0 +1,2538 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{02\_graphs\_and\_isolation\_analysis}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    In this part we will generate the data and the analysis connected to
+figure 1: - the force directed network - the network with sets of
+attituteds - the conditional probability - the hierarchical clustering
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{import-the-packages-to-use}{%
+\section{Import the packages to use}\label{import-the-packages-to-use}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} import packages}
+
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{importlib}
+
+\PY{c+c1}{\PYZsh{} import usefulFunctions as uf}
+\PY{c+c1}{\PYZsh{} importlib.reload(uf)}
+
+\PY{k+kn}{from} \PY{n+nn}{wgm2018\PYZus{}pack} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{k+kn}{import} \PY{n+nn}{winsound} 
+\PY{k+kn}{import} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{stats} \PY{k}{as} \PY{n+nn}{stt}
+
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{LinearRegression}
+
+\PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{spatial}\PY{n+nn}{.}\PY{n+nn}{distance} \PY{k+kn}{import} \PY{n}{pdist}
+\PY{k+kn}{import} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{cluster}\PY{n+nn}{.}\PY{n+nn}{hierarchy} \PY{k}{as} \PY{n+nn}{sch}
+\PY{k+kn}{import} \PY{n+nn}{random}
+
+\PY{c+c1}{\PYZsh{} Note: if you moved the package WGM\PYZus{}pack, make sure to uncomment the following lines and insert the path of where you placed it}
+\PY{c+c1}{\PYZsh{} import sys}
+\PY{c+c1}{\PYZsh{} sys.path.insert(0, \PYZsq{}C:/your/path/to/the/package\PYZsq{}) \PYZsh{} make sure to use / and not \PYZbs{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{list-of-attitudes}{%
+\section{List of attitudes}\label{list-of-attitudes}}
+
+    Here we set some lists that we will use later.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{list\PYZus{}science\PYZus{}related\PYZus{}attitudes2} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Attitudes on vaccines}
+\PY{n}{vacc\PYZus{}neut\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{n}{vacc\PYZus{}pos\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{vacc\PYZus{}Wpos\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                 \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{vacc\PYZus{}Spos\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                 \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+    
+\PY{n}{vacc\PYZus{}neg\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{vacc\PYZus{}Wneg\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                 \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{vacc\PYZus{}Sneg\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                 \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{n}{vacc\PYZus{}att\PYZus{}full} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+           
+           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat agree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ 
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Neither agree nor disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+           
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Somewhat disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+           
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+ \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:Strongly disagree}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Attitudes Don\PYZsq{}t know}
+\PY{n}{dk\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Know Science:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Understand meaning Sci:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Study disease is science:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Poetry is science:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in Prim.School:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in Sec.School:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in College/Uni:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Sci past 30d:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Med past 30d:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Sci:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Med:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence NGO:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence Hospitals:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits you:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science improve next gen:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science will increase jobs:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Who trust most for Med Advice:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Ever heard of vaccines:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Have Children:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Your Child Received Vax:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Religion:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science disagreed w your religion:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(disagreement)Believe science or religion:(DK)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Fully positive}
+\PY{n}{full\PYZus{}trust\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:A lot}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence Hospitals:Yes}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits you:Yes}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science improve next gen:Yes}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Weakly positive}
+\PY{n}{medium\PYZus{}trus\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:Some}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:Some}\PY{l+s+s1}{\PYZsq{}}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} weakly negative}
+\PY{n}{medium\PYZus{}distrust\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:Not much}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Totally negative}
+\PY{n}{full\PYZus{}distrust\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:Not at all}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{religion\PYZus{}att} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Religion:Named a specific religion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Refused attitudes}
+\PY{n}{refused\PYZus{}att} \PY{o}{=} \PY{p}{[}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Know Science:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Understand meaning Sci:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Study disease is science:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Poetry is science:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in Prim.School:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in Sec.School:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Learned Sci in College/Uni:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Sci past 30d:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Med past 30d:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Sci:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Searched Med:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence NGO:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confidence Hospitals:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust neighborhood:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust government:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Journalists:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doctors:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust NGO workers:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust traditional Healers:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust science:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Scientists 4 info:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist intentions:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists honesty:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientist in Med Comp intentions:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust scientists in Med Comp honesty:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science benefits you:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science improve next gen:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science will increase jobs:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Who trust most for Med Advice:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust gov 4 Med Advice:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trust Doc 4 med advice:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Ever heard of vaccines:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines important to children:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Safe:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vaccines Effective:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Have Children:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Your Child Received Vax:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Religion:(DK)/(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Science disagreed w your religion:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(disagreement)Believe science or religion:(Refused)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    Aggregated lists (i.e.~each item is the name of a list)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{list\PYZus{}aggr\PYZus{}vacc} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}neut\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}Wpos\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}Spos\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}Wneg\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vacc\PYZus{}Sneg\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{list\PYZus{}aggr\PYZus{}trust} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{full\PYZus{}trust\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{medium\PYZus{}trus\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{medium\PYZus{}distrust\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{full\PYZus{}distrust\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{list\PYZus{}aggr\PYZus{}ref} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{refused\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dk\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{list\PYZus{}aggr\PYZus{}relig} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{religion\PYZus{}att}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{functions}{%
+\section{Functions}\label{functions}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Calculates the correlation bootstrapping the data}
+\PY{k}{def} \PY{n+nf}{bootstrap\PYZus{}corr}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{f}\PY{p}{)}\PY{p}{:}
+    \PY{n}{l} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+    \PY{n}{c\PYZus{}vec} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+        \PY{n}{r} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{floor}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{o}{*}\PY{n}{l}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
+        \PY{n}{xi} \PY{o}{=} \PY{n}{x}\PY{p}{[}\PY{n}{r}\PY{p}{]}
+        \PY{n}{yi} \PY{o}{=} \PY{n}{y}\PY{p}{[}\PY{n}{r}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}         xi = x}
+\PY{c+c1}{\PYZsh{}         yi = y}
+        
+        \PY{n}{ct} \PY{o}{=} \PY{n}{f}\PY{p}{(}\PY{n}{xi}\PY{p}{,}\PY{n}{yi}\PY{p}{)}
+        
+        \PY{n}{c\PYZus{}vec}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{ct}\PY{p}{)}
+        
+    \PY{n}{c\PYZus{}vec} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{c\PYZus{}vec}\PY{p}{)}
+    
+    \PY{k}{return} \PY{p}{[}\PY{n}{c\PYZus{}vec}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{c\PYZus{}vec}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{c\PYZus{}vec}\PY{p}{)}\PY{p}{]}
+    
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{67}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{spearmanr\PYZus{}}\PY{p}{(}\PY{o}{*}\PY{n}{args}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} this version returns only r, which will be used for making the network}
+    \PY{p}{[}\PY{n}{r}\PY{p}{,}\PY{n}{p}\PY{p}{]} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{spearmanr}\PY{p}{(}\PY{o}{*}\PY{n}{args}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{r}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{spearmanr\PYZus{}positiv}\PY{p}{(}\PY{o}{*}\PY{n}{args}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} this version returns only r, which will be used for making the network}
+    \PY{p}{[}\PY{n}{r}\PY{p}{,}\PY{n}{p}\PY{p}{]} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{spearmanr}\PY{p}{(}\PY{o}{*}\PY{n}{args}\PY{p}{)}
+    \PY{k}{if} \PY{n}{r} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{:}
+        \PY{n}{r} \PY{o}{=} \PY{l+m+mi}{0}
+    
+    \PY{k}{return} \PY{n}{r}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} This is the main function for generating the network}
+\PY{c+c1}{\PYZsh{} it takes the dataframe and calculates the edge\PYZsq{}s weight using the metrics function}
+\PY{c+c1}{\PYZsh{} exclude the same question means that it\PYZsq{}s not going to calculate correlation between answers of the same question (which makes sense)}
+\PY{k}{def} \PY{n+nf}{make\PYZus{}graph\PYZus{}}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{,} \PY{n}{metrics}\PY{p}{,} \PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{print\PYZus{}}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}  \PY{n}{df}\PY{o}{=}\PY{n}{wgm\PYZus{}bool}\PY{p}{)}\PY{p}{:}
+    \PY{n}{G} \PY{o}{=} \PY{n}{nx}\PY{o}{.}\PY{n}{Graph}\PY{p}{(}\PY{p}{)}
+    
+    \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{node\PYZus{}i} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{j}\PY{p}{,} \PY{n}{node\PYZus{}j} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} for each couple of nodes}
+            
+            \PY{k}{if} \PY{n}{print\PYZus{}}\PY{p}{:}
+                \PY{n}{n\PYZus{}tot} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
+                \PY{n}{current} \PY{o}{=} \PY{p}{(}\PY{n}{i}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{)}\PY{p}{)}\PY{o}{+}\PY{p}{(}\PY{n}{j}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{n}{current}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{n\PYZus{}tot}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{round}\PY{p}{(}\PY{n}{current}\PY{o}{/}\PY{n}{n\PYZus{}tot}\PY{p}{,}\PY{n}{decimals}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+            
+            \PY{k}{if} \PY{n}{j} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{i}\PY{p}{:} \PY{c+c1}{\PYZsh{} optimization to avoid calculating the same couple twice}
+                \PY{k}{continue}
+
+            \PY{k}{if} \PY{n}{exclude\PYZus{}same\PYZus{}question}\PY{p}{:}
+                \PY{k}{if} \PY{n}{node\PYZus{}i}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{==} \PY{n}{node\PYZus{}j}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+                    \PY{c+c1}{\PYZsh{} if they belong to the same question}
+                    \PY{k}{continue}
+
+            \PY{p}{[}\PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{]} \PY{o}{=} \PY{n}{get\PYZus{}col\PYZus{}values}\PY{p}{(}\PY{p}{[}\PY{n}{node\PYZus{}i}\PY{p}{,}\PY{n}{node\PYZus{}j}\PY{p}{]}\PY{p}{,} \PY{n}{df}\PY{o}{=}\PY{n}{df}\PY{p}{)} \PY{c+c1}{\PYZsh{} get the two columns}
+            \PY{n}{weight} \PY{o}{=} \PY{n}{metrics}\PY{p}{(}\PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{)} \PY{c+c1}{\PYZsh{} calculate the correlation}
+            \PY{n}{G}\PY{o}{.}\PY{n}{add\PYZus{}weighted\PYZus{}edges\PYZus{}from}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{n}{node\PYZus{}i}\PY{p}{,}\PY{n}{node\PYZus{}j}\PY{p}{,}\PY{n}{weight}\PY{p}{)}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} set it in the graph}
+    \PY{k}{return} \PY{n}{G}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Calculates partial correlation}
+\PY{k}{def} \PY{n+nf}{p\PYZus{}corr\PYZus{}}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{z}\PY{p}{,}\PY{n}{corr\PYZus{}fun}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} correlatuon between x and y after removing z}
+    
+    \PY{c+c1}{\PYZsh{} Need to reshape z as column for being accepted in LinearRegression}
+    \PY{n}{zz} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{el} \PY{o+ow}{in} \PY{n}{z}\PY{p}{:}
+        \PY{n}{zz}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{[}\PY{n}{el}\PY{p}{]}\PY{p}{)}
+    \PY{n}{z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{zz}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Get the residuals on x}
+    \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+    \PY{n}{x\PYZus{}predicted} \PY{o}{=} \PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+    \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+    \PY{n}{x\PYZus{}residuals} \PY{o}{=} \PY{n}{x}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}predicted}
+
+    \PY{c+c1}{\PYZsh{} Get the residuals on y}
+    \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+    \PY{n}{y\PYZus{}predicted} \PY{o}{=} \PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+    \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+    \PY{n}{y\PYZus{}residuals} \PY{o}{=} \PY{n}{y}\PY{o}{\PYZhy{}}\PY{n}{y\PYZus{}predicted}
+
+    \PY{n}{p\PYZus{}corr} \PY{o}{=} \PY{n}{corr\PYZus{}fun}\PY{p}{(}\PY{n}{x\PYZus{}residuals}\PY{p}{,} \PY{n}{y\PYZus{}residuals}\PY{p}{)}
+    \PY{k}{return} \PY{n}{p\PYZus{}corr}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} calculates partial correlation removing multiple z\PYZsq{}s}
+\PY{k}{def} \PY{n+nf}{p\PYZus{}corr\PYZus{}multiple}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{n}{z\PYZus{}s}\PY{p}{,}\PY{n}{corr\PYZus{}fun}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} z\PYZus{}s is a list of elements to remove}
+    \PY{c+c1}{\PYZsh{} correlatuon between x and y after removing z}
+    
+    \PY{c+c1}{\PYZsh{} Need to reshape z as column for being accepted in LinearRegression}
+    
+    \PY{k}{for} \PY{n}{z} \PY{o+ow}{in} \PY{n}{z\PYZus{}s}\PY{p}{:}
+        \PY{n}{zz} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{k}{for} \PY{n}{el} \PY{o+ow}{in} \PY{n}{z}\PY{p}{:}
+            \PY{n}{zz}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{[}\PY{n}{el}\PY{p}{]}\PY{p}{)}
+        \PY{n}{z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{zz}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} Get the residuals on x}
+        \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+        \PY{n}{x\PYZus{}predicted} \PY{o}{=} \PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+        \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{x}\PY{p}{)}
+        \PY{n}{x\PYZus{}residuals} \PY{o}{=} \PY{n}{x}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}predicted}
+
+        \PY{c+c1}{\PYZsh{} Get the residuals on y}
+        \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+        \PY{n}{y\PYZus{}predicted} \PY{o}{=} \PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+        \PY{n}{reg} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+        \PY{n}{y\PYZus{}residuals} \PY{o}{=} \PY{n}{y}\PY{o}{\PYZhy{}}\PY{n}{y\PYZus{}predicted}
+        
+        \PY{n}{x} \PY{o}{=} \PY{n}{x\PYZus{}residuals}
+        \PY{n}{y} \PY{o}{=} \PY{n}{y\PYZus{}residuals}
+
+    \PY{n}{p\PYZus{}corr} \PY{o}{=} \PY{n}{corr\PYZus{}fun}\PY{p}{(}\PY{n}{x\PYZus{}residuals}\PY{p}{,} \PY{n}{y\PYZus{}residuals}\PY{p}{)}
+    \PY{k}{return} \PY{n}{p\PYZus{}corr}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Just changes the shape of a 2D array}
+\PY{k}{def} \PY{n+nf}{invert\PYZus{}2d\PYZus{}array}\PY{p}{(}\PY{n}{V}\PY{p}{)}\PY{p}{:}
+    \PY{n}{Vp} \PY{o}{=} \PY{p}{[}\PY{n+nb}{list}\PY{p}{(}\PY{p}{)} \PY{k}{for} \PY{n}{el} \PY{o+ow}{in} \PY{n}{V}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}
+    \PY{k}{for} \PY{n}{el} \PY{o+ow}{in} \PY{n}{V}\PY{p}{:}
+        \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
+        \PY{k}{for} \PY{n}{sub} \PY{o+ow}{in} \PY{n}{el}\PY{p}{:}
+            \PY{n}{Vp}\PY{p}{[}\PY{n}{count}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{sub}\PY{p}{)}
+            \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+    \PY{n}{Vp} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{Vp}\PY{p}{)}
+    \PY{k}{return}\PY{p}{(}\PY{n}{Vp}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} This function acts on dataframe checking for all the people which have \PYZdq{}at least\PYZdq{} one of the selected attitude}
+\PY{c+c1}{\PYZsh{} it returns both the mask and the relative dataframe of the people who have at least one of these attitudess}
+\PY{k}{def} \PY{n+nf}{atleast}\PY{p}{(}\PY{n}{df\PYZus{}}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{attitudes}\PY{p}{,} \PY{n}{PRINT}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,} \PY{n}{text}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
+    
+    \PY{n}{mask\PYZus{}t} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{df\PYZus{}}\PY{p}{[}\PY{n}{attitudes}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{0}
+
+    \PY{k}{for} \PY{n}{att} \PY{o+ow}{in} \PY{n}{attitudes}\PY{p}{:}
+        \PY{n}{mask\PYZus{}t} \PY{o}{+}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{df\PYZus{}}\PY{p}{[}\PY{n}{att}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}
+
+    \PY{n}{mask} \PY{o}{=} \PY{n}{mask\PYZus{}t} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{N}
+    
+    \PY{n}{l} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{df\PYZus{}}\PY{p}{[}\PY{n}{mask}\PY{p}{]}\PY{o}{.}\PY{n}{index}\PY{p}{)}
+    
+    \PY{k}{if} \PY{n}{PRINT}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{text}\PY{p}{,} \PY{n}{l}\PY{p}{)}
+
+    \PY{k}{return} \PY{p}{[}\PY{n}{mask}\PY{p}{,} \PY{n}{df\PYZus{}}\PY{p}{[}\PY{n}{mask}\PY{p}{]}\PY{p}{,} \PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} get the average }
+\PY{k}{def} \PY{n+nf}{get\PYZus{}avg\PYZus{}corr}\PY{p}{(}\PY{n}{G}\PY{p}{)}\PY{p}{:}
+    \PY{n}{nod} \PY{o}{=} \PY{n}{G}\PY{o}{.}\PY{n}{nodes}
+
+    \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
+    \PY{n}{avg\PYZus{}corr} \PY{o}{=} \PY{l+m+mi}{0}
+    
+    \PY{k}{for} \PY{n}{nn1} \PY{o+ow}{in} \PY{n}{nod}\PY{p}{:}
+        \PY{k}{for} \PY{n}{nn2} \PY{o+ow}{in} \PY{n}{nod}\PY{p}{:}
+            \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+            \PY{n}{dat} \PY{o}{=} \PY{n}{G}\PY{o}{.}\PY{n}{get\PYZus{}edge\PYZus{}data}\PY{p}{(}\PY{n}{nn1}\PY{p}{,}\PY{n}{nn2}\PY{p}{)}
+
+            \PY{k}{if} \PY{o+ow}{not} \PY{n}{dat} \PY{o}{==} \PY{k+kc}{None}\PY{p}{:}
+                \PY{k}{if} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{weight}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{in} \PY{n}{dat}\PY{p}{:}
+                    \PY{n}{w} \PY{o}{=} \PY{n}{dat}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{weight}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{w}\PY{o}{\PYZgt{}}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{:}
+                        \PY{n}{avg\PYZus{}corr} \PY{o}{+}\PY{o}{=} \PY{n}{w}
+    
+    \PY{n}{avg\PYZus{}corr} \PY{o}{=} \PY{n}{avg\PYZus{}corr} \PY{o}{/} \PY{n}{count}
+    
+    \PY{k}{return} \PY{n}{avg\PYZus{}corr}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} shuffle the dataset while preserving the properties of the answers}
+\PY{c+c1}{\PYZsh{} i.e. a person can only select 1 answer from the same question and no more.}
+\PY{k}{def} \PY{n+nf}{shuffle\PYZus{}df\PYZus{}for\PYZus{}p\PYZus{}exclus}\PY{p}{(}\PY{n}{df\PYZus{}or}\PY{p}{)}\PY{p}{:} 
+    \PY{n}{df\PYZus{}new} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{)}
+    \PY{n}{cols} \PY{o}{=} \PY{n}{df\PYZus{}or}\PY{o}{.}\PY{n}{columns}
+
+    \PY{n}{l} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{df\PYZus{}or}\PY{p}{[}\PY{n}{df\PYZus{}or}\PY{o}{.}\PY{n}{columns}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} len of the columns}
+    
+    \PY{n}{questions} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{cols}\PY{p}{:}
+        \PY{n}{q} \PY{o}{=} \PY{n}{col}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        
+        \PY{k}{if} \PY{o+ow}{not} \PY{n}{q} \PY{o+ow}{in} \PY{n}{questions}\PY{p}{:}
+            \PY{n}{questions}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{q}\PY{p}{)}
+    
+
+    \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{questions}\PY{p}{:}
+        
+        \PY{c+c1}{\PYZsh{} select all the columns starting with this question}
+        \PY{n}{col\PYZus{}select} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{cols}\PY{p}{:}
+            \PY{k}{if} \PY{n}{q} \PY{o+ow}{in} \PY{n}{col}\PY{p}{:}
+                \PY{n}{col\PYZus{}select}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{col}\PY{p}{)}
+        
+        \PY{n}{one} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{ones}\PY{p}{(}\PY{n}{l}\PY{p}{)}
+        \PY{n}{index\PYZus{}vec} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{l}\PY{p}{)}\PY{p}{)}
+        \PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{index\PYZus{}vec}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}         print(l)}
+        
+        \PY{n}{posit} \PY{o}{=} \PY{l+m+mi}{0}
+        
+        \PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{col\PYZus{}select}\PY{p}{:} \PY{c+c1}{\PYZsh{} for each column of this question}
+            
+            \PY{n}{n} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{df\PYZus{}or}\PY{p}{[}\PY{n}{col}\PY{p}{]}\PY{p}{)}\PY{c+c1}{\PYZsh{} number of trues}
+            
+            \PY{c+c1}{\PYZsh{} select the indeces}
+            \PY{n}{index\PYZus{}select} \PY{o}{=} \PY{n}{index\PYZus{}vec}\PY{p}{[}\PY{n}{posit}\PY{p}{:}\PY{n}{posit}\PY{o}{+}\PY{n}{n}\PY{p}{]}
+            \PY{n}{posit} \PY{o}{+}\PY{o}{=} \PY{n}{n}
+            
+            \PY{n}{vec} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{l}\PY{p}{)}
+            \PY{n}{vec}\PY{p}{[}\PY{n}{index\PYZus{}select}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+
+            \PY{n}{df\PYZus{}new}\PY{p}{[}\PY{n}{col}\PY{p}{]} \PY{o}{=} \PY{n}{vec}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{bool}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}         print(n, np.sum(df\PYZus{}new[col]))}
+
+    \PY{k}{return} \PY{n}{df\PYZus{}new}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{making-figure-1a}{%
+\section{Making figure 1a}\label{making-figure-1a}}
+
+    First, you need to generate the network
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Parameters}
+\PY{n}{PRINT} \PY{o}{=} \PY{k+kc}{False} \PY{c+c1}{\PYZsh{} Set it to true to print the progression of the analysis}
+\PY{n}{df} \PY{o}{=} \PY{n}{wgm\PYZus{}bool}
+\PY{n}{list\PYZus{}of\PYZus{}nodes} \PY{o}{=} \PY{n}{list\PYZus{}science\PYZus{}related\PYZus{}attitudes2}
+\PY{c+c1}{\PYZsh{} list\PYZus{}of\PYZus{}nodes = [\PYZsq{}Know Science:Nothing at all\PYZsq{}, \PYZsq{}Trust Scientists 4 info:A lot\PYZsq{}, \PYZsq{}Know Science:A lot\PYZsq{}]}
+
+\PY{c+c1}{\PYZsh{} This is the function for generating the network}
+\PY{n}{G} \PY{o}{=} \PY{n}{make\PYZus{}graph\PYZus{}}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{,} \PY{n}{spearmanr\PYZus{}positiv}\PY{p}{,} \PY{n}{print\PYZus{}}\PY{o}{=}\PY{n}{PRINT}\PY{p}{,} \PY{n}{df}\PY{o}{=}\PY{n}{df}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} nx.draw(G, with\PYZus{}labels=True)}
+\PY{c+c1}{\PYZsh{} plt.show()}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Add the network attributes (color and size, just for visualization
+purposes)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Add color and size for each node (So gephi)}
+
+\PY{n}{color\PYZus{}dic} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{A lot}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Some}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Not much}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Not at all}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{5}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Strongly agree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Somewhat agree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Neither agree nor disagree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{3}\PY{p}{,}
+             \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Somewhat disagree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Strongly disagree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{5}\PY{p}{\PYZcb{}}
+
+\PY{n}{attributes} \PY{o}{=} \PY{n+nb}{dict}\PY{p}{(}\PY{p}{)}
+\PY{k}{for} \PY{n}{node} \PY{o+ow}{in} \PY{n}{G}\PY{o}{.}\PY{n}{nodes}\PY{p}{:}
+    \PY{n}{size} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{node}\PY{p}{]}\PY{p}{)}
+    \PY{n}{color} \PY{o}{=} \PY{n}{node}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+    
+    
+\PY{c+c1}{\PYZsh{}     attributes[node] = \PYZob{}\PYZdq{}size\PYZus{}\PYZdq{}:size, \PYZdq{}color\PYZus{}\PYZdq{}:color\PYZcb{}}
+    \PY{n}{attributes}\PY{p}{[}\PY{n}{node}\PY{p}{]} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{size\PYZus{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{n}{size}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{color\PYZus{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{n}{color\PYZus{}dic}\PY{p}{[}\PY{n}{color}\PY{p}{]}\PY{p}{\PYZcb{}}
+    
+\PY{n}{nx}\PY{o}{.}\PY{n}{set\PYZus{}node\PYZus{}attributes}\PY{p}{(}\PY{n}{G}\PY{p}{,} \PY{n}{attributes}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Save}
+\PY{n}{filename} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{net\PYZus{}data\PYZus{}fig\PYZus{}1a}\PY{l+s+s1}{\PYZsq{}}
+\PY{c+c1}{\PYZsh{} nx.write\PYZus{}gexf(G,\PYZsq{}C:/Users/DeenoZord/Documents/All\PYZus{}Files\PYZus{}Laptop/Coding/Pyton\PYZus{}files/work\PYZus{}vaccines\PYZus{}limerick/Wellcome\PYZus{}trust/Data\PYZus{}analysis/nature\PYZus{}full\PYZus{}results/gephi/\PYZsq{}+filename+\PYZsq{}.gexf\PYZsq{})}
+\PY{c+c1}{\PYZsh{} nx.write\PYZus{}gexf(G,\PYZsq{}C:/where/you/want/to/save/it/\PYZsq{}+filename+\PYZsq{}.gexf\PYZsq{}) \PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{} uncomment!!}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    Import in Gephi and run \texttt{force\ atlas\ 2} you will obtain:
+\includegraphics{attachment:image.png}
+
+    Color the nodes based on the attribute \texttt{color}
+\includegraphics{attachment:image.png}
+
+    The choice of the colors is automatic by gephi, so they will not match
+our code of green = positive and red = negative
+\includegraphics{attachment:image.png}
+
+    However, you can manually remap them to match the same colors. Also, you
+can increase the size of the nodes to make them more visible (here size
+30) \includegraphics{attachment:image.png}
+
+    Eventually, you can also add labels and explore in details each area:
+\includegraphics{attachment:image.png}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{calculate-the-p-value}{%
+\subsubsection{Calculate the p-value}\label{calculate-the-p-value}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{55}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{N\PYZus{}rep} \PY{o}{=} \PY{l+m+mi}{1000} \PY{c+c1}{\PYZsh{} number of times you want to run the bootstrap to calculate the p\PYZhy{}value}
+\PY{n}{N\PYZus{}sub} \PY{o}{=} \PY{l+m+mi}{1000} \PY{c+c1}{\PYZsh{} if you want to use subsampling}
+
+\PY{c+c1}{\PYZsh{} df\PYZus{}t=wgm\PYZus{}bool.copy() \PYZsh{} full dataset}
+\PY{c+c1}{\PYZsh{} df\PYZus{}t=wgm\PYZus{}bool [wgm\PYZus{}bool[\PYZdq{}Country:\PYZdq{}+\PYZdq{}Ireland\PYZdq{}]] \PYZsh{} subsampled on a specific country}
+\PY{n}{df\PYZus{}t}\PY{o}{=}\PY{n}{wgm\PYZus{}bool}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{n}{N\PYZus{}sub}\PY{p}{)}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{wgm\PYZus{}bool}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{]}\PY{c+c1}{\PYZsh{} subsampled on N random lines}
+
+\PY{n}{G3} \PY{o}{=} \PY{n}{make\PYZus{}graph\PYZus{}}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{,} \PY{n}{spearmanr\PYZus{}}\PY{p}{,} \PY{n}{print\PYZus{}}\PY{o}{=}\PY{n}{PRINT}\PY{p}{,} \PY{n}{df}\PY{o}{=}\PY{n}{df\PYZus{}t}\PY{p}{)}
+
+\PY{n}{real\PYZus{}corr} \PY{o}{=} \PY{n}{get\PYZus{}avg\PYZus{}corr}\PY{p}{(}\PY{n}{G3}\PY{p}{)}
+
+\PY{n}{new\PYZus{}corrs} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{N\PYZus{}rep}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iteration number = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{i}\PY{p}{)}
+
+    \PY{n}{df} \PY{o}{=} \PY{n}{shuffle\PYZus{}df\PYZus{}for\PYZus{}p\PYZus{}exclus}\PY{p}{(}\PY{n}{df\PYZus{}t}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+    
+    \PY{n}{Gn} \PY{o}{=} \PY{n}{make\PYZus{}graph\PYZus{}}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{,} \PY{n}{spearmanr\PYZus{}}\PY{p}{,} \PY{n}{print\PYZus{}}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,} \PY{n}{df}\PY{o}{=}\PY{n}{df}\PY{p}{)}
+    
+    \PY{n}{corr\PYZus{}new} \PY{o}{=} \PY{n}{get\PYZus{}avg\PYZus{}corr}\PY{p}{(}\PY{n}{Gn}\PY{p}{)}
+
+    \PY{n}{new\PYZus{}corrs}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{corr\PYZus{}new}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iteration number =  0
+Iteration number =  1
+Iteration number =  2
+Iteration number =  3
+Iteration number =  4
+Iteration number =  5
+Iteration number =  6
+Iteration number =  7
+Iteration number =  8
+Iteration number =  9
+Iteration number =  10
+Iteration number =  11
+Iteration number =  12
+Iteration number =  13
+Iteration number =  14
+Iteration number =  15
+Iteration number =  16
+Iteration number =  17
+Iteration number =  18
+Iteration number =  19
+Iteration number =  20
+Iteration number =  21
+Iteration number =  22
+Iteration number =  23
+Iteration number =  24
+Iteration number =  25
+Iteration number =  26
+Iteration number =  27
+Iteration number =  28
+Iteration number =  29
+Iteration number =  30
+Iteration number =  31
+Iteration number =  32
+Iteration number =  33
+Iteration number =  34
+Iteration number =  35
+Iteration number =  36
+Iteration number =  37
+Iteration number =  38
+Iteration number =  39
+Iteration number =  40
+Iteration number =  41
+Iteration number =  42
+Iteration number =  43
+Iteration number =  44
+Iteration number =  45
+Iteration number =  46
+Iteration number =  47
+Iteration number =  48
+Iteration number =  49
+Iteration number =  50
+Iteration number =  51
+Iteration number =  52
+Iteration number =  53
+Iteration number =  54
+Iteration number =  55
+Iteration number =  56
+Iteration number =  57
+Iteration number =  58
+Iteration number =  59
+Iteration number =  60
+Iteration number =  61
+Iteration number =  62
+Iteration number =  63
+Iteration number =  64
+Iteration number =  65
+Iteration number =  66
+Iteration number =  67
+Iteration number =  68
+Iteration number =  69
+Iteration number =  70
+Iteration number =  71
+Iteration number =  72
+Iteration number =  73
+Iteration number =  74
+Iteration number =  75
+Iteration number =  76
+Iteration number =  77
+Iteration number =  78
+Iteration number =  79
+Iteration number =  80
+Iteration number =  81
+Iteration number =  82
+Iteration number =  83
+Iteration number =  84
+Iteration number =  85
+Iteration number =  86
+Iteration number =  87
+Iteration number =  88
+Iteration number =  89
+Iteration number =  90
+Iteration number =  91
+Iteration number =  92
+Iteration number =  93
+Iteration number =  94
+Iteration number =  95
+Iteration number =  96
+Iteration number =  97
+Iteration number =  98
+Iteration number =  99
+Iteration number =  100
+Iteration number =  101
+Iteration number =  102
+Iteration number =  103
+Iteration number =  104
+Iteration number =  105
+Iteration number =  106
+Iteration number =  107
+Iteration number =  108
+Iteration number =  109
+Iteration number =  110
+Iteration number =  111
+Iteration number =  112
+Iteration number =  113
+Iteration number =  114
+Iteration number =  115
+Iteration number =  116
+Iteration number =  117
+Iteration number =  118
+Iteration number =  119
+Iteration number =  120
+Iteration number =  121
+Iteration number =  122
+Iteration number =  123
+Iteration number =  124
+Iteration number =  125
+Iteration number =  126
+Iteration number =  127
+Iteration number =  128
+Iteration number =  129
+Iteration number =  130
+Iteration number =  131
+Iteration number =  132
+Iteration number =  133
+Iteration number =  134
+Iteration number =  135
+Iteration number =  136
+Iteration number =  137
+Iteration number =  138
+Iteration number =  139
+Iteration number =  140
+Iteration number =  141
+Iteration number =  142
+Iteration number =  143
+Iteration number =  144
+Iteration number =  145
+Iteration number =  146
+Iteration number =  147
+Iteration number =  148
+Iteration number =  149
+Iteration number =  150
+Iteration number =  151
+Iteration number =  152
+Iteration number =  153
+Iteration number =  154
+Iteration number =  155
+Iteration number =  156
+Iteration number =  157
+Iteration number =  158
+Iteration number =  159
+Iteration number =  160
+Iteration number =  161
+Iteration number =  162
+Iteration number =  163
+Iteration number =  164
+Iteration number =  165
+Iteration number =  166
+Iteration number =  167
+Iteration number =  168
+Iteration number =  169
+Iteration number =  170
+Iteration number =  171
+Iteration number =  172
+Iteration number =  173
+Iteration number =  174
+Iteration number =  175
+Iteration number =  176
+Iteration number =  177
+Iteration number =  178
+Iteration number =  179
+Iteration number =  180
+Iteration number =  181
+Iteration number =  182
+Iteration number =  183
+Iteration number =  184
+Iteration number =  185
+Iteration number =  186
+Iteration number =  187
+Iteration number =  188
+Iteration number =  189
+Iteration number =  190
+Iteration number =  191
+Iteration number =  192
+Iteration number =  193
+Iteration number =  194
+Iteration number =  195
+Iteration number =  196
+Iteration number =  197
+Iteration number =  198
+Iteration number =  199
+Iteration number =  200
+Iteration number =  201
+Iteration number =  202
+Iteration number =  203
+Iteration number =  204
+Iteration number =  205
+Iteration number =  206
+Iteration number =  207
+Iteration number =  208
+Iteration number =  209
+Iteration number =  210
+Iteration number =  211
+Iteration number =  212
+Iteration number =  213
+Iteration number =  214
+Iteration number =  215
+Iteration number =  216
+Iteration number =  217
+Iteration number =  218
+Iteration number =  219
+Iteration number =  220
+Iteration number =  221
+Iteration number =  222
+Iteration number =  223
+Iteration number =  224
+Iteration number =  225
+Iteration number =  226
+Iteration number =  227
+Iteration number =  228
+Iteration number =  229
+Iteration number =  230
+Iteration number =  231
+Iteration number =  232
+Iteration number =  233
+Iteration number =  234
+Iteration number =  235
+Iteration number =  236
+Iteration number =  237
+Iteration number =  238
+Iteration number =  239
+Iteration number =  240
+Iteration number =  241
+Iteration number =  242
+Iteration number =  243
+Iteration number =  244
+Iteration number =  245
+Iteration number =  246
+Iteration number =  247
+Iteration number =  248
+Iteration number =  249
+Iteration number =  250
+Iteration number =  251
+Iteration number =  252
+Iteration number =  253
+Iteration number =  254
+Iteration number =  255
+Iteration number =  256
+Iteration number =  257
+Iteration number =  258
+Iteration number =  259
+Iteration number =  260
+Iteration number =  261
+Iteration number =  262
+Iteration number =  263
+Iteration number =  264
+Iteration number =  265
+Iteration number =  266
+Iteration number =  267
+Iteration number =  268
+Iteration number =  269
+Iteration number =  270
+Iteration number =  271
+Iteration number =  272
+Iteration number =  273
+Iteration number =  274
+Iteration number =  275
+Iteration number =  276
+Iteration number =  277
+Iteration number =  278
+Iteration number =  279
+Iteration number =  280
+Iteration number =  281
+Iteration number =  282
+Iteration number =  283
+Iteration number =  284
+Iteration number =  285
+Iteration number =  286
+Iteration number =  287
+Iteration number =  288
+Iteration number =  289
+Iteration number =  290
+Iteration number =  291
+Iteration number =  292
+Iteration number =  293
+Iteration number =  294
+Iteration number =  295
+Iteration number =  296
+Iteration number =  297
+Iteration number =  298
+Iteration number =  299
+Iteration number =  300
+Iteration number =  301
+Iteration number =  302
+Iteration number =  303
+Iteration number =  304
+Iteration number =  305
+Iteration number =  306
+Iteration number =  307
+Iteration number =  308
+Iteration number =  309
+Iteration number =  310
+Iteration number =  311
+Iteration number =  312
+Iteration number =  313
+Iteration number =  314
+Iteration number =  315
+Iteration number =  316
+Iteration number =  317
+Iteration number =  318
+Iteration number =  319
+Iteration number =  320
+Iteration number =  321
+Iteration number =  322
+Iteration number =  323
+Iteration number =  324
+Iteration number =  325
+Iteration number =  326
+Iteration number =  327
+Iteration number =  328
+Iteration number =  329
+Iteration number =  330
+Iteration number =  331
+Iteration number =  332
+Iteration number =  333
+Iteration number =  334
+Iteration number =  335
+Iteration number =  336
+Iteration number =  337
+Iteration number =  338
+Iteration number =  339
+Iteration number =  340
+Iteration number =  341
+Iteration number =  342
+Iteration number =  343
+Iteration number =  344
+Iteration number =  345
+Iteration number =  346
+Iteration number =  347
+Iteration number =  348
+Iteration number =  349
+Iteration number =  350
+Iteration number =  351
+Iteration number =  352
+Iteration number =  353
+Iteration number =  354
+Iteration number =  355
+Iteration number =  356
+Iteration number =  357
+Iteration number =  358
+Iteration number =  359
+Iteration number =  360
+Iteration number =  361
+Iteration number =  362
+Iteration number =  363
+Iteration number =  364
+Iteration number =  365
+Iteration number =  366
+Iteration number =  367
+Iteration number =  368
+Iteration number =  369
+Iteration number =  370
+Iteration number =  371
+Iteration number =  372
+Iteration number =  373
+Iteration number =  374
+Iteration number =  375
+Iteration number =  376
+Iteration number =  377
+Iteration number =  378
+Iteration number =  379
+Iteration number =  380
+Iteration number =  381
+Iteration number =  382
+Iteration number =  383
+Iteration number =  384
+Iteration number =  385
+Iteration number =  386
+Iteration number =  387
+Iteration number =  388
+Iteration number =  389
+Iteration number =  390
+Iteration number =  391
+Iteration number =  392
+Iteration number =  393
+Iteration number =  394
+Iteration number =  395
+Iteration number =  396
+Iteration number =  397
+Iteration number =  398
+Iteration number =  399
+Iteration number =  400
+Iteration number =  401
+Iteration number =  402
+Iteration number =  403
+Iteration number =  404
+Iteration number =  405
+Iteration number =  406
+Iteration number =  407
+Iteration number =  408
+Iteration number =  409
+Iteration number =  410
+Iteration number =  411
+Iteration number =  412
+Iteration number =  413
+Iteration number =  414
+Iteration number =  415
+Iteration number =  416
+Iteration number =  417
+Iteration number =  418
+Iteration number =  419
+Iteration number =  420
+Iteration number =  421
+Iteration number =  422
+Iteration number =  423
+Iteration number =  424
+Iteration number =  425
+Iteration number =  426
+Iteration number =  427
+Iteration number =  428
+Iteration number =  429
+Iteration number =  430
+Iteration number =  431
+Iteration number =  432
+Iteration number =  433
+Iteration number =  434
+Iteration number =  435
+Iteration number =  436
+Iteration number =  437
+Iteration number =  438
+Iteration number =  439
+Iteration number =  440
+Iteration number =  441
+Iteration number =  442
+Iteration number =  443
+Iteration number =  444
+Iteration number =  445
+Iteration number =  446
+Iteration number =  447
+Iteration number =  448
+Iteration number =  449
+Iteration number =  450
+Iteration number =  451
+Iteration number =  452
+Iteration number =  453
+Iteration number =  454
+Iteration number =  455
+Iteration number =  456
+Iteration number =  457
+Iteration number =  458
+Iteration number =  459
+Iteration number =  460
+Iteration number =  461
+Iteration number =  462
+Iteration number =  463
+Iteration number =  464
+Iteration number =  465
+Iteration number =  466
+Iteration number =  467
+Iteration number =  468
+Iteration number =  469
+Iteration number =  470
+Iteration number =  471
+Iteration number =  472
+Iteration number =  473
+Iteration number =  474
+Iteration number =  475
+Iteration number =  476
+Iteration number =  477
+Iteration number =  478
+Iteration number =  479
+Iteration number =  480
+Iteration number =  481
+Iteration number =  482
+Iteration number =  483
+Iteration number =  484
+Iteration number =  485
+Iteration number =  486
+Iteration number =  487
+Iteration number =  488
+Iteration number =  489
+Iteration number =  490
+Iteration number =  491
+Iteration number =  492
+Iteration number =  493
+Iteration number =  494
+Iteration number =  495
+Iteration number =  496
+Iteration number =  497
+Iteration number =  498
+Iteration number =  499
+Iteration number =  500
+Iteration number =  501
+Iteration number =  502
+Iteration number =  503
+Iteration number =  504
+Iteration number =  505
+Iteration number =  506
+Iteration number =  507
+Iteration number =  508
+Iteration number =  509
+Iteration number =  510
+Iteration number =  511
+Iteration number =  512
+Iteration number =  513
+Iteration number =  514
+Iteration number =  515
+Iteration number =  516
+Iteration number =  517
+Iteration number =  518
+Iteration number =  519
+Iteration number =  520
+Iteration number =  521
+Iteration number =  522
+Iteration number =  523
+Iteration number =  524
+Iteration number =  525
+Iteration number =  526
+Iteration number =  527
+Iteration number =  528
+Iteration number =  529
+Iteration number =  530
+Iteration number =  531
+Iteration number =  532
+Iteration number =  533
+Iteration number =  534
+Iteration number =  535
+Iteration number =  536
+Iteration number =  537
+Iteration number =  538
+Iteration number =  539
+Iteration number =  540
+Iteration number =  541
+Iteration number =  542
+Iteration number =  543
+Iteration number =  544
+Iteration number =  545
+Iteration number =  546
+Iteration number =  547
+Iteration number =  548
+Iteration number =  549
+Iteration number =  550
+Iteration number =  551
+Iteration number =  552
+Iteration number =  553
+Iteration number =  554
+Iteration number =  555
+Iteration number =  556
+Iteration number =  557
+Iteration number =  558
+Iteration number =  559
+Iteration number =  560
+Iteration number =  561
+Iteration number =  562
+Iteration number =  563
+Iteration number =  564
+Iteration number =  565
+Iteration number =  566
+Iteration number =  567
+Iteration number =  568
+Iteration number =  569
+Iteration number =  570
+Iteration number =  571
+Iteration number =  572
+Iteration number =  573
+Iteration number =  574
+Iteration number =  575
+Iteration number =  576
+Iteration number =  577
+Iteration number =  578
+Iteration number =  579
+Iteration number =  580
+Iteration number =  581
+Iteration number =  582
+Iteration number =  583
+Iteration number =  584
+Iteration number =  585
+Iteration number =  586
+Iteration number =  587
+Iteration number =  588
+Iteration number =  589
+Iteration number =  590
+Iteration number =  591
+Iteration number =  592
+Iteration number =  593
+Iteration number =  594
+Iteration number =  595
+Iteration number =  596
+Iteration number =  597
+Iteration number =  598
+Iteration number =  599
+Iteration number =  600
+Iteration number =  601
+Iteration number =  602
+Iteration number =  603
+Iteration number =  604
+Iteration number =  605
+Iteration number =  606
+Iteration number =  607
+Iteration number =  608
+Iteration number =  609
+Iteration number =  610
+Iteration number =  611
+Iteration number =  612
+Iteration number =  613
+Iteration number =  614
+Iteration number =  615
+Iteration number =  616
+Iteration number =  617
+Iteration number =  618
+Iteration number =  619
+Iteration number =  620
+Iteration number =  621
+Iteration number =  622
+Iteration number =  623
+Iteration number =  624
+Iteration number =  625
+Iteration number =  626
+Iteration number =  627
+Iteration number =  628
+Iteration number =  629
+Iteration number =  630
+Iteration number =  631
+Iteration number =  632
+Iteration number =  633
+Iteration number =  634
+Iteration number =  635
+Iteration number =  636
+Iteration number =  637
+Iteration number =  638
+Iteration number =  639
+Iteration number =  640
+Iteration number =  641
+Iteration number =  642
+Iteration number =  643
+Iteration number =  644
+Iteration number =  645
+Iteration number =  646
+Iteration number =  647
+Iteration number =  648
+Iteration number =  649
+Iteration number =  650
+Iteration number =  651
+Iteration number =  652
+Iteration number =  653
+Iteration number =  654
+Iteration number =  655
+Iteration number =  656
+Iteration number =  657
+Iteration number =  658
+Iteration number =  659
+Iteration number =  660
+Iteration number =  661
+Iteration number =  662
+Iteration number =  663
+Iteration number =  664
+Iteration number =  665
+Iteration number =  666
+Iteration number =  667
+Iteration number =  668
+Iteration number =  669
+Iteration number =  670
+Iteration number =  671
+Iteration number =  672
+Iteration number =  673
+Iteration number =  674
+Iteration number =  675
+Iteration number =  676
+Iteration number =  677
+Iteration number =  678
+Iteration number =  679
+Iteration number =  680
+Iteration number =  681
+Iteration number =  682
+Iteration number =  683
+Iteration number =  684
+Iteration number =  685
+Iteration number =  686
+Iteration number =  687
+Iteration number =  688
+Iteration number =  689
+Iteration number =  690
+Iteration number =  691
+Iteration number =  692
+Iteration number =  693
+Iteration number =  694
+Iteration number =  695
+Iteration number =  696
+Iteration number =  697
+Iteration number =  698
+Iteration number =  699
+Iteration number =  700
+Iteration number =  701
+Iteration number =  702
+Iteration number =  703
+Iteration number =  704
+Iteration number =  705
+Iteration number =  706
+Iteration number =  707
+Iteration number =  708
+Iteration number =  709
+Iteration number =  710
+Iteration number =  711
+Iteration number =  712
+Iteration number =  713
+Iteration number =  714
+Iteration number =  715
+Iteration number =  716
+Iteration number =  717
+Iteration number =  718
+Iteration number =  719
+Iteration number =  720
+Iteration number =  721
+Iteration number =  722
+Iteration number =  723
+Iteration number =  724
+Iteration number =  725
+Iteration number =  726
+Iteration number =  727
+Iteration number =  728
+Iteration number =  729
+Iteration number =  730
+Iteration number =  731
+Iteration number =  732
+Iteration number =  733
+Iteration number =  734
+Iteration number =  735
+Iteration number =  736
+Iteration number =  737
+Iteration number =  738
+Iteration number =  739
+Iteration number =  740
+Iteration number =  741
+Iteration number =  742
+Iteration number =  743
+Iteration number =  744
+Iteration number =  745
+Iteration number =  746
+Iteration number =  747
+Iteration number =  748
+Iteration number =  749
+Iteration number =  750
+Iteration number =  751
+Iteration number =  752
+Iteration number =  753
+Iteration number =  754
+Iteration number =  755
+Iteration number =  756
+Iteration number =  757
+Iteration number =  758
+Iteration number =  759
+Iteration number =  760
+Iteration number =  761
+Iteration number =  762
+Iteration number =  763
+Iteration number =  764
+Iteration number =  765
+Iteration number =  766
+Iteration number =  767
+Iteration number =  768
+Iteration number =  769
+Iteration number =  770
+Iteration number =  771
+Iteration number =  772
+Iteration number =  773
+Iteration number =  774
+Iteration number =  775
+Iteration number =  776
+Iteration number =  777
+Iteration number =  778
+Iteration number =  779
+Iteration number =  780
+Iteration number =  781
+Iteration number =  782
+Iteration number =  783
+Iteration number =  784
+Iteration number =  785
+Iteration number =  786
+Iteration number =  787
+Iteration number =  788
+Iteration number =  789
+Iteration number =  790
+Iteration number =  791
+Iteration number =  792
+Iteration number =  793
+Iteration number =  794
+Iteration number =  795
+Iteration number =  796
+Iteration number =  797
+Iteration number =  798
+Iteration number =  799
+Iteration number =  800
+Iteration number =  801
+Iteration number =  802
+Iteration number =  803
+Iteration number =  804
+Iteration number =  805
+Iteration number =  806
+Iteration number =  807
+Iteration number =  808
+Iteration number =  809
+Iteration number =  810
+Iteration number =  811
+Iteration number =  812
+Iteration number =  813
+Iteration number =  814
+Iteration number =  815
+Iteration number =  816
+Iteration number =  817
+Iteration number =  818
+Iteration number =  819
+Iteration number =  820
+Iteration number =  821
+Iteration number =  822
+Iteration number =  823
+Iteration number =  824
+Iteration number =  825
+Iteration number =  826
+Iteration number =  827
+Iteration number =  828
+Iteration number =  829
+Iteration number =  830
+Iteration number =  831
+Iteration number =  832
+Iteration number =  833
+Iteration number =  834
+Iteration number =  835
+Iteration number =  836
+Iteration number =  837
+Iteration number =  838
+Iteration number =  839
+Iteration number =  840
+Iteration number =  841
+Iteration number =  842
+Iteration number =  843
+Iteration number =  844
+Iteration number =  845
+Iteration number =  846
+Iteration number =  847
+Iteration number =  848
+Iteration number =  849
+Iteration number =  850
+Iteration number =  851
+Iteration number =  852
+Iteration number =  853
+Iteration number =  854
+Iteration number =  855
+Iteration number =  856
+Iteration number =  857
+Iteration number =  858
+Iteration number =  859
+Iteration number =  860
+Iteration number =  861
+Iteration number =  862
+Iteration number =  863
+Iteration number =  864
+Iteration number =  865
+Iteration number =  866
+Iteration number =  867
+Iteration number =  868
+Iteration number =  869
+Iteration number =  870
+Iteration number =  871
+Iteration number =  872
+Iteration number =  873
+Iteration number =  874
+Iteration number =  875
+Iteration number =  876
+Iteration number =  877
+Iteration number =  878
+Iteration number =  879
+Iteration number =  880
+Iteration number =  881
+Iteration number =  882
+Iteration number =  883
+Iteration number =  884
+Iteration number =  885
+Iteration number =  886
+Iteration number =  887
+Iteration number =  888
+Iteration number =  889
+Iteration number =  890
+Iteration number =  891
+Iteration number =  892
+Iteration number =  893
+Iteration number =  894
+Iteration number =  895
+Iteration number =  896
+Iteration number =  897
+Iteration number =  898
+Iteration number =  899
+Iteration number =  900
+Iteration number =  901
+Iteration number =  902
+Iteration number =  903
+Iteration number =  904
+Iteration number =  905
+Iteration number =  906
+Iteration number =  907
+Iteration number =  908
+Iteration number =  909
+Iteration number =  910
+Iteration number =  911
+Iteration number =  912
+Iteration number =  913
+Iteration number =  914
+Iteration number =  915
+Iteration number =  916
+Iteration number =  917
+Iteration number =  918
+Iteration number =  919
+Iteration number =  920
+Iteration number =  921
+Iteration number =  922
+Iteration number =  923
+Iteration number =  924
+Iteration number =  925
+Iteration number =  926
+Iteration number =  927
+Iteration number =  928
+Iteration number =  929
+Iteration number =  930
+Iteration number =  931
+Iteration number =  932
+Iteration number =  933
+Iteration number =  934
+Iteration number =  935
+Iteration number =  936
+Iteration number =  937
+Iteration number =  938
+Iteration number =  939
+Iteration number =  940
+Iteration number =  941
+Iteration number =  942
+Iteration number =  943
+Iteration number =  944
+Iteration number =  945
+Iteration number =  946
+Iteration number =  947
+Iteration number =  948
+Iteration number =  949
+Iteration number =  950
+Iteration number =  951
+Iteration number =  952
+Iteration number =  953
+Iteration number =  954
+Iteration number =  955
+Iteration number =  956
+Iteration number =  957
+Iteration number =  958
+Iteration number =  959
+Iteration number =  960
+Iteration number =  961
+Iteration number =  962
+Iteration number =  963
+Iteration number =  964
+Iteration number =  965
+Iteration number =  966
+Iteration number =  967
+Iteration number =  968
+Iteration number =  969
+Iteration number =  970
+Iteration number =  971
+Iteration number =  972
+Iteration number =  973
+Iteration number =  974
+Iteration number =  975
+Iteration number =  976
+Iteration number =  977
+Iteration number =  978
+Iteration number =  979
+Iteration number =  980
+Iteration number =  981
+Iteration number =  982
+Iteration number =  983
+Iteration number =  984
+Iteration number =  985
+Iteration number =  986
+Iteration number =  987
+Iteration number =  988
+Iteration number =  989
+Iteration number =  990
+Iteration number =  991
+Iteration number =  992
+Iteration number =  993
+Iteration number =  994
+Iteration number =  995
+Iteration number =  996
+Iteration number =  997
+Iteration number =  998
+Iteration number =  999
+    \end{Verbatim}
+
+    Analyze the results and print if it is significant or not
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{57}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{new\PYZus{}corrs} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{new\PYZus{}corrs}\PY{p}{)}
+
+\PY{n}{z\PYZus{}score} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{real\PYZus{}corr}\PY{o}{\PYZhy{}}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{new\PYZus{}corrs}\PY{p}{)}\PY{p}{)}\PY{o}{/}\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{new\PYZus{}corrs}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Real corr = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{real\PYZus{}corr}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{G}\PY{o}{.}\PY{n}{edges}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Max of the simulated = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{new\PYZus{}corrs}\PY{p}{)}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{G}\PY{o}{.}\PY{n}{edges}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Estimated correlation}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{new\PYZus{}corrs}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{std = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{new\PYZus{}corrs}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Significance}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{std differences = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{z\PYZus{}score}\PY{p}{)}
+
+\PY{n}{p\PYZus{}value} \PY{o}{=} \PY{n}{stt}\PY{o}{.}\PY{n}{norm}\PY{o}{.}\PY{n}{cdf}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{n}{z\PYZus{}score}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{p value = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{p\PYZus{}value}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
+\PY{k}{if} \PY{n}{p\PYZus{}value}\PY{o}{\PYZlt{}}\PY{l+m+mf}{0.01}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{IT IS SIGNIFICANT! :)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{else}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{IT IS NOT SIGNIFICANT :(}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Real corr =  108.38936524570072
+
+Max of the simulated =  30.277789967774265
+
+Estimated correlation
+mean =  0.01189108827881595
+std =  0.00024435977365493665
+
+Significance
+std differences =  138.4169404490521
+p value =  0.0
+
+IT IS SIGNIFICANT! :)
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{make-figure-1b}{%
+\section{Make figure 1b}\label{make-figure-1b}}
+
+    \hypertarget{make-the-second-graph}{%
+\subsubsection{Make the second graph}\label{make-the-second-graph}}
+
+    Notice: this new graph includes also negative edges, so we need to
+recalculate \texttt{G} including the negative ones (we'll call this
+\texttt{G2}, while the aggregated network will be \texttt{GG})
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{58}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ans\PYZus{}dic} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Strongly agree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Somewhat agree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Neither agree nor disagree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{3}\PY{p}{,}
+             \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Somewhat disagree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Strongly disagree}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{5}\PY{p}{\PYZcb{}}
+
+\PY{n}{G2} \PY{o}{=} \PY{n}{make\PYZus{}graph\PYZus{}}\PY{p}{(}\PY{n}{list\PYZus{}of\PYZus{}nodes}\PY{p}{,} \PY{n}{spearmanr\PYZus{}}\PY{p}{,} \PY{n}{print\PYZus{}}\PY{o}{=}\PY{n}{PRINT}\PY{p}{,} \PY{n}{df}\PY{o}{=}\PY{n}{df}\PY{p}{)} \PY{c+c1}{\PYZsh{} Calculate G2 (including negative edges)}
+
+\PY{c+c1}{\PYZsh{} make the network}
+\PY{n}{GG} \PY{o}{=} \PY{n}{nx}\PY{o}{.}\PY{n}{Graph}\PY{p}{(}\PY{p}{)}
+\PY{k}{for} \PY{n}{ans} \PY{o+ow}{in} \PY{n}{ans\PYZus{}dic}\PY{p}{:}
+    \PY{n}{GG}\PY{o}{.}\PY{n}{add\PYZus{}node}\PY{p}{(}\PY{n}{ans}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{node1} \PY{o+ow}{in} \PY{n}{G2}\PY{o}{.}\PY{n}{nodes}\PY{p}{:}
+    \PY{n}{ans1} \PY{o}{=} \PY{n}{node1}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+    \PY{k}{for} \PY{n}{node2} \PY{o+ow}{in} \PY{n}{G2}\PY{o}{.}\PY{n}{nodes}\PY{p}{:}
+        \PY{n}{ans2} \PY{o}{=} \PY{n}{node2}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+        
+        \PY{k}{if} \PY{p}{(}\PY{n}{ans1} \PY{o+ow}{in} \PY{n}{ans\PYZus{}dic}\PY{p}{)} \PY{o+ow}{and} \PY{p}{(}\PY{n}{ans2} \PY{o+ow}{in} \PY{n}{ans\PYZus{}dic}\PY{p}{)}\PY{p}{:}
+
+            \PY{k}{if} \PY{n}{GG}\PY{o}{.}\PY{n}{get\PYZus{}edge\PYZus{}data}\PY{p}{(}\PY{n}{ans1}\PY{p}{,}\PY{n}{ans2}\PY{p}{)} \PY{o}{==} \PY{k+kc}{None}\PY{p}{:} \PY{c+c1}{\PYZsh{} if the edge doesn\PYZsq{}t exist yet}
+                \PY{n}{GG}\PY{o}{.}\PY{n}{add\PYZus{}weighted\PYZus{}edges\PYZus{}from}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{n}{ans1}\PY{p}{,}\PY{n}{ans2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+
+            \PY{k}{if} \PY{p}{(}\PY{o+ow}{not} \PY{n}{ans1} \PY{o}{==} \PY{n}{ans2}\PY{p}{)} \PY{o+ow}{and} \PY{p}{(}\PY{o+ow}{not} \PY{n}{node1} \PY{o}{==} \PY{n}{node2}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} only if they belong to two different nodes and levels}
+                \PY{n}{weight0} \PY{o}{=} \PY{n}{G2}\PY{o}{.}\PY{n}{get\PYZus{}edge\PYZus{}data}\PY{p}{(}\PY{n}{node1}\PY{p}{,}\PY{n}{node2}\PY{p}{)}
+                \PY{k}{if} \PY{n}{weight0} \PY{o}{==} \PY{k+kc}{None}\PY{p}{:}
+                    \PY{n}{weight0} \PY{o}{=} \PY{l+m+mi}{0}
+                \PY{k}{else}\PY{p}{:}
+                    \PY{n}{weight0} \PY{o}{=} \PY{n}{weight0}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{weight}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+                \PY{n}{weight\PYZus{}base} \PY{o}{=} \PY{n}{GG}\PY{o}{.}\PY{n}{get\PYZus{}edge\PYZus{}data}\PY{p}{(}\PY{n}{ans1}\PY{p}{,}\PY{n}{ans2}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{weight}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+                \PY{n}{w} \PY{o}{=} \PY{n}{weight\PYZus{}base}\PY{o}{+}\PY{n}{weight0}\PY{o}{/}\PY{l+m+mi}{9}
+
+                \PY{n}{GG}\PY{o}{.}\PY{n}{add\PYZus{}weighted\PYZus{}edges\PYZus{}from}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{n}{ans1}\PY{p}{,}\PY{n}{ans2}\PY{p}{,}\PY{n}{w}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}     if ans in ans\PYZus{}dic:}
+    \PY{c+c1}{\PYZsh{}         posit = ans\PYZus{}dic[ans]}
+    \PY{c+c1}{\PYZsh{}         distrib[posit\PYZhy{}1] += np.sum(df[node])}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{59}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Add positivity as edge attribute}
+
+\PY{n}{attributes} \PY{o}{=} \PY{n+nb}{dict}\PY{p}{(}\PY{p}{)}
+\PY{k}{for} \PY{n}{edge} \PY{o+ow}{in} \PY{n}{GG}\PY{o}{.}\PY{n}{edges}\PY{p}{:}
+    \PY{n}{si\PYZus{}} \PY{o}{=} \PY{n}{GG}\PY{o}{.}\PY{n}{get\PYZus{}edge\PYZus{}data}\PY{p}{(}\PY{n}{edge}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{edge}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{weight}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{si\PYZus{}} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sign}\PY{p}{(}\PY{n}{si\PYZus{}}\PY{p}{)}
+    \PY{n}{attributes}\PY{p}{[}\PY{n}{edge}\PY{p}{]} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pos\PYZus{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{n+nb}{int}\PY{p}{(}\PY{n}{si\PYZus{}}\PY{o}{+}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{\PYZcb{}}
+    
+\PY{n}{nx}\PY{o}{.}\PY{n}{set\PYZus{}edge\PYZus{}attributes}\PY{p}{(}\PY{n}{GG}\PY{p}{,} \PY{n}{attributes}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Save}
+\PY{n}{filename} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{raw\PYZus{}fig\PYZus{}1b}\PY{l+s+s1}{\PYZsq{}}
+\PY{c+c1}{\PYZsh{} nx.write\PYZus{}gexf(GG,\PYZsq{}C:/Users/DeenoZord/Documents/All\PYZus{}Files\PYZus{}Laptop/Coding/Pyton\PYZus{}files/work\PYZus{}vaccines\PYZus{}limerick/Wellcome\PYZus{}trust/Data\PYZus{}analysis/nature\PYZus{}full\PYZus{}results/gephi/\PYZsq{}+filename+\PYZsq{}.gexf\PYZsq{})}
+\PY{c+c1}{\PYZsh{} nx.write\PYZus{}gexf(GG,\PYZsq{}C:/where/you/want/to/save/it/\PYZsq{}+filename+\PYZsq{}.gexf\PYZsq{})}
+\end{Verbatim}
+\end{tcolorbox}
+
+    To make the figure, open it in gephi but do not use force atlas (or
+force atlas 2). Indeed, it deals very badly with negative edges. When
+you open it it will look like this:
+\includegraphics{attachment:image.png}
+
+    Use the edge attributes to color the edges based on their positivity.
+Here the value 1 would be the negative edges and value 3 would identify
+the positive ones. \includegraphics{attachment:image.png}
+
+    Use the labels of each node to understand which one is which. Then you
+can manually recolor the nodes and position them in the way you prefer:
+\includegraphics{attachment:image.png}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{additional-visualization}{%
+\subsubsection{Additional
+visualization}\label{additional-visualization}}
+
+    If you want to remove the negative edges, you can re-run the previous
+analysis on G instead of G2 or directly, go to the ``data laboratory''
+tab in gephi and remove the negative edges.
+\includegraphics{attachment:image.png}
+
+    If you re-run the force atlas 2 now you'll find:
+\includegraphics{attachment:image.png}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{fig-1c}{%
+\section{Fig 1c}\label{fig-1c}}
+
+    Here we calculate the hierarchical clustering
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{62}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Make the dendogram}
+\PY{n}{df\PYZus{}t} \PY{o}{=} \PY{n}{wgm\PYZus{}bool}\PY{p}{[}\PY{n}{vacc\PYZus{}att\PYZus{}full}\PY{p}{]}
+\PY{n}{arr\PYZus{}bool} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{df\PYZus{}t}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}
+\PY{n}{arr\PYZus{}bool} \PY{o}{=} \PY{n}{invert\PYZus{}2d\PYZus{}array}\PY{p}{(}\PY{n}{arr\PYZus{}bool}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} pdist and sch are from the scipy package}
+\PY{n}{y} \PY{o}{=} \PY{n}{pdist}\PY{p}{(}\PY{n}{arr\PYZus{}bool}\PY{p}{)} \PY{c+c1}{\PYZsh{} }
+\PY{n}{dendogram} \PY{o}{=} \PY{n}{sch}\PY{o}{.}\PY{n}{dendrogram}\PY{p}{(}\PY{n}{sch}\PY{o}{.}\PY{n}{linkage}\PY{p}{(}\PY{n}{y}\PY{p}{,} \PY{n}{method}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ward}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_68_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{63}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Print the legend}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{vacc\PYZus{}att\PYZus{}full}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{vacc\PYZus{}att\PYZus{}full}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0  =  Vaccines important to children:Strongly agree
+1  =  Vaccines Safe:Strongly agree
+2  =  Vaccines Effective:Strongly agree
+3  =  Vaccines important to children:Somewhat agree
+4  =  Vaccines Safe:Somewhat agree
+5  =  Vaccines Effective:Somewhat agree
+6  =  Vaccines important to children:Neither agree nor disagree
+7  =  Vaccines Safe:Neither agree nor disagree
+8  =  Vaccines Effective:Neither agree nor disagree
+9  =  Vaccines important to children:Somewhat disagree
+10  =  Vaccines Effective:Somewhat disagree
+11  =  Vaccines Safe:Somewhat disagree
+12  =  Vaccines Safe:Strongly disagree
+13  =  Vaccines important to children:Strongly disagree
+14  =  Vaccines Effective:Strongly disagree
+    \end{Verbatim}
+
+    Thus we have: (dendogram + legend)
+\includegraphics{attachment:image.png}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{fig-1d}{%
+\section{Fig 1d}\label{fig-1d}}
+
+    Calculate the conditional probability. This is simply done by checking
+all the people that have at least one attitude X and then the subgroup
+that has also an attitude Y. Then you divide the number of people who
+have both an X and a Y by the number of people that have X.
+
+This will tell you the probability that a person that has X has also Y.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{64}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} The first line isolates all the people with at least 1 strongly positive attitude}
+\PY{c+c1}{\PYZsh{} The second checks }
+\PY{p}{[}\PY{n}{M}\PY{p}{,} \PY{n}{df\PYZus{}t2}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{wgm\PYZus{}bool}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}Spos\PYZus{}att}\PY{p}{)}
+\PY{p}{[}\PY{n}{M3}\PY{p}{,} \PY{n}{df\PYZus{}t3}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{df\PYZus{}t2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}neut\PYZus{}att}\PY{p}{)}
+\PY{n}{Spos\PYZus{}neut} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M3}\PY{p}{)}\PY{o}{/}\PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M}\PY{p}{)} \PY{c+c1}{\PYZsh{} this is the conditional probability}
+
+\PY{c+c1}{\PYZsh{} Repeat the same process for every level (e.g. weakly positive)}
+\PY{p}{[}\PY{n}{M}\PY{p}{,} \PY{n}{df\PYZus{}t2}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{wgm\PYZus{}bool}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}Wpos\PYZus{}att}\PY{p}{)}
+\PY{p}{[}\PY{n}{M3}\PY{p}{,} \PY{n}{df\PYZus{}t3}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{df\PYZus{}t2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}neut\PYZus{}att}\PY{p}{)}
+\PY{n}{Wpos\PYZus{}neut} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M3}\PY{p}{)}\PY{o}{/}\PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M}\PY{p}{)}
+
+\PY{p}{[}\PY{n}{M}\PY{p}{,} \PY{n}{df\PYZus{}t2}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{wgm\PYZus{}bool}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}neut\PYZus{}att}\PY{p}{)}
+\PY{p}{[}\PY{n}{M3}\PY{p}{,} \PY{n}{df\PYZus{}t3}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{df\PYZus{}t2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}neut\PYZus{}att}\PY{p}{)}
+\PY{n}{neut\PYZus{}neut} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M3}\PY{p}{)}\PY{o}{/}\PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M}\PY{p}{)}
+
+\PY{p}{[}\PY{n}{M}\PY{p}{,} \PY{n}{df\PYZus{}t2}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{wgm\PYZus{}bool}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}Wneg\PYZus{}att}\PY{p}{)}
+\PY{p}{[}\PY{n}{M3}\PY{p}{,} \PY{n}{df\PYZus{}t3}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{df\PYZus{}t2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}neut\PYZus{}att}\PY{p}{)}
+\PY{n}{Wneg\PYZus{}neut} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M3}\PY{p}{)}\PY{o}{/}\PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M}\PY{p}{)}
+
+\PY{p}{[}\PY{n}{M}\PY{p}{,} \PY{n}{df\PYZus{}t2}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{wgm\PYZus{}bool}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}Sneg\PYZus{}att}\PY{p}{)}
+\PY{p}{[}\PY{n}{M3}\PY{p}{,} \PY{n}{df\PYZus{}t3}\PY{p}{]} \PY{o}{=} \PY{n}{atleast}\PY{p}{(}\PY{n}{df\PYZus{}t2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{vacc\PYZus{}neut\PYZus{}att}\PY{p}{)}
+\PY{n}{Sneg\PYZus{}neut} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M3}\PY{p}{)}\PY{o}{/}\PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{M}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Create two vectors with all the conditional probabilities}
+\PY{n}{cond\PYZus{}prb1} \PY{o}{=} \PY{p}{[}\PY{n}{Spos\PYZus{}neut}\PY{p}{,} \PY{n}{Wpos\PYZus{}neut}\PY{p}{,} \PY{n}{neut\PYZus{}neut}\PY{p}{,} \PY{n}{Wneg\PYZus{}neut}\PY{p}{,} \PY{n}{Sneg\PYZus{}neut}\PY{p}{]}
+\PY{n}{cond\PYZus{}prb2} \PY{o}{=} \PY{p}{[}\PY{n}{Spos\PYZus{}neut}\PY{p}{,} \PY{n}{Wpos\PYZus{}neut}\PY{p}{,} \PY{n}{Wneg\PYZus{}neut}\PY{p}{,} \PY{n}{Sneg\PYZus{}neut}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Plot the bar graph (excluding the neutrals)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{65}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{barlist}\PY{o}{=}\PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cond\PYZus{}prb2}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{cond\PYZus{}prb2}\PY{p}{)}
+\PY{n}{barlist}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}color}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{darkgreen}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{barlist}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}color}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{barlist}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}color}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{barlist}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}color}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_76_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Plot the samebar graph including also the neutrals. Of course, the
+probability that a person with a neutral attitude has at least a neutral
+attitude is trivially 100\%
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{66}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{barlist}\PY{o}{=}\PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cond\PYZus{}prb1}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{cond\PYZus{}prb1}\PY{p}{)}
+\PY{n}{barlist}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}color}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{darkgreen}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{barlist}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}color}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{barlist}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}color}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{barlist}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}color}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_78_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

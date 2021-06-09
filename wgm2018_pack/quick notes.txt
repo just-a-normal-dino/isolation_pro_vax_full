@@ -1,0 +1,31 @@
+Main dataframes:
+
+wgm_numeric
+
+wgm_labels
+
+wgm_bool
+
+
+lists:
+
+list_of_catheg_questions
+
+list_science_related_questions -&- list_science_related_attitudes
+
+countries_list
+
+
+functions:
+
+[selected_attitudes] = make_att_from_quest(selected_questions)
+
+[G] = make_graph(list_of_nodes, metrics, exclude_same_question=True)
+
+d_semicorr(x,y) and d_corr(x,y)
+
+spearmanr_(x,y)
+
+corr2distance(corr, method='linear', min_=0, max_=1)
+
+[cols] = get_col_values(keys, df=wgm_bool)
